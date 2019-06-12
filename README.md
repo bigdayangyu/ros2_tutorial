@@ -1,6 +1,8 @@
 # ros2_tutorial
+### Install ROS2 dashing 
+[Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
-### source the ros2 enviornment 
+### Cource the ros2 enviornment 
 ```bash
 $ source /opt/ros/$ROS_DISTRO/setup.bash
 ```
@@ -14,7 +16,7 @@ And then put some packages into the src folder
 ```bash
 $ colcon build --symlink-install
 ```
-#### colcon build options 
+#### Colcon Build options 
 Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/pdf/colcon/latest/colcon.pdf)
  1. Show all output immediately on the console
  ```bash 
