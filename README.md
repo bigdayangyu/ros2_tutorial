@@ -43,10 +43,15 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
  $ ros2 pkg create --<package name> [deps]
  ```
  2. Create Pacakge Manually
-* Create c++ package
+* Create C++ package
     * The package should contain a file named ``package.xml`` provides meta information about the package
     * The package should contain a file named ``CMakeLists.txt``, provide information about the package and dependencies
     Sample ``package.xml``
+* C++ demo package [demo_nodes_cpp](https://github.com/ros2/demos/tree/dashing/demo_nodes_cpp)
+    * Publisher/Subscriber
+    * Launch 
+    * Service 
+    
 
 
  
