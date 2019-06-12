@@ -2,7 +2,7 @@
 ### Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
-### Cource the ros2 enviornment 
+### Source the ros2 enviornment 
 ```bash
 $ source /opt/ros/$ROS_DISTRO/setup.bash
 ```
@@ -53,7 +53,14 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     * Publisher/Subscriber
     * Launch 
     * Service 
-    
+* Create Python package
+    * The package should contain a file named ``package.xml`` provides meta information about the package
+    * The package should contain a file named ``setup.py``, provide information about the package
+* Python demo package [rclpy](https://github.com/ros2/examples/tree/dashing/rclpy)
+    * Publisher/Subscriber
+    * Launch 
+    * Service 
+
 
 
  
