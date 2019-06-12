@@ -61,6 +61,24 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     * Launch 
     * Service 
 
-
-
+### ROS2 Command
+* run ros2 node 
+```bash
+ros2 run <package_name> <executable>
+```
+* ros2 launch
+  * launch file should be saved as `.launch.py`. eg. `my_file.launch.py`
+```bash 
+ros2 launch <package_name> <launch_file>
+```
+* ros2 pkg 
+```bash
+ros2 pkg list
+ros2 pkg prefix <package_name>
+```
+* ros2 topic
+```bash
+ros2 topic echo <topic_name>
+ros2 topic list
+```
  
