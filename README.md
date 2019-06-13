@@ -39,6 +39,9 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
  ```bash
  $ colcon build --packages-above <name-of-pkg>
   ```
+  
+ 6. To ignore the package while building 
+ insert AMENT_IGNORE into the package 
  ### Create a new ros2 package
  1. Using command 
  ```bash 
