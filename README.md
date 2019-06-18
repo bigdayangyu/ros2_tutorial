@@ -39,7 +39,6 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
  ```bash
  $ colcon build --packages-above <name-of-pkg>
   ```
-  
  6. To ignore the package while building 
  insert AMENT_IGNORE into the package 
  ### Create a new ros2 package
@@ -84,4 +83,19 @@ ros2 pkg prefix <package_name>
 ros2 topic echo <topic_name>
 ros2 topic list
 ```
- 
+* Stop daemon
+```bash
+ros2 daemon stop
+```
+### ROS bridge between ROS1 and ROS2
+Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+
+### TF2 
+1. Broadcasting Transforms
+Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
+* Broadcast Transformation: 
+  * `tf2_ros::TransformBroadcaster() ` constructor
+  * `tf2_ros::TransformBroadcaster::sendTransform`to send transforms 
+* Broadcast Static Transformation 
+  * `tf2_ros::StaticTransformBroadcaster()`, constructor,
+  * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
