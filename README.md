@@ -2,18 +2,20 @@
 
 ## Table of Contents
 1. [Install ROS2 dashing ](#install-ros2-dashing)
-2. [Create ROS2 Workspace](#create-a-new-ros2-workspace)
-3. [Create ROS2 Package](#create-a-new-ros2-package)
-3. [Build ROS2 Packages using Colcon Build](#build-the-workspace)
-4. [Run ROS2 command](#ros2-command)
-5. [New Features in ROS2](#ros2-new-features)
-   * [ROS1-ROS2 bridge](#ros-bridge-betwenn-ros1-and-ros2)
+2. [Workspace and Packages](#workspace-and-packages)
+   * [Create ROS2 Workspace](#create-a-new-ros2-workspace)
+   * [Create ROS2 Package](#create-a-new-ros2-package)
+   * [Build ROS2 Packages using Colcon Build](#build-the-workspace)
+3. [Run ROS2 command](#ros2-command)
+4. [New Features in ROS2](#ros2-new-features)
+   * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
+## Workspace and Packages
 ### Source the ros2 enviornment 
 ```bash
 $ source /opt/ros/$ROS_DISTRO/setup.bash
