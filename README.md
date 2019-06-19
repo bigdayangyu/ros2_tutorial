@@ -1,13 +1,16 @@
 # ros2_tutorial
 
-# Table of Contents
-1. [Install ROS2 dashing ](#install-ros2-dashing )
-2. [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
-3. [Third Example](#third-example)
+## Table of Contents
+1. [Install ROS2 dashing ](#install-ros2-dashing)
+2. [Create ROS2 Workspace](#create-a-new-ros2-workspace)
+3. [Create ROS2 Package](#create-a-new-ros2-package)
+3. [Build ROS2 Packages using Colcon Build](#build-the-workspace)
+4. [Run ROS2 command](#ros2-command)
+5. [New Features in ROS2](#ros2-new-features)
+   * [ROS1-ROS2 bridge](#ros-bridge-betwenn-ros1-and-ros2)
+   * [TF2](#tf2)
+   * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
 
-## Example
-## Example2
-## Third Example
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
@@ -21,6 +24,27 @@ $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws
 ```
 And then put some packages into the src folder 
+### Create a new ros2 package
+ 1. Using command 
+ ```bash 
+ $ ros2 pkg create --<package name> [deps]
+ ```
+ 2. Create Pacakge Manually
+* Create C++ package
+    * The package should contain a file named ``package.xml`` provides meta information about the package
+    * The package should contain a file named ``CMakeLists.txt``, provide information about the package and dependencies
+    Sample ``package.xml``
+* C++ demo package [demo_nodes_cpp](https://github.com/ros2/demos/tree/dashing/demo_nodes_cpp)
+    * Publisher/Subscriber
+    * Launch 
+    * Service 
+* Create Python package
+    * The package should contain a file named ``package.xml`` provides meta information about the package
+    * The package should contain a file named ``setup.py``, provide information about the package
+* Python demo package [rclpy](https://github.com/ros2/examples/tree/dashing/rclpy)
+    * Publisher/Subscriber
+    * Launch 
+    * Service 
 ### Build the workspace
 ```bash
 $ colcon build --symlink-install
@@ -55,28 +79,6 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ```bash
   colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
 ```
- ### Create a new ros2 package
- 1. Using command 
- ```bash 
- $ ros2 pkg create --<package name> [deps]
- ```
- 2. Create Pacakge Manually
-* Create C++ package
-    * The package should contain a file named ``package.xml`` provides meta information about the package
-    * The package should contain a file named ``CMakeLists.txt``, provide information about the package and dependencies
-    Sample ``package.xml``
-* C++ demo package [demo_nodes_cpp](https://github.com/ros2/demos/tree/dashing/demo_nodes_cpp)
-    * Publisher/Subscriber
-    * Launch 
-    * Service 
-* Create Python package
-    * The package should contain a file named ``package.xml`` provides meta information about the package
-    * The package should contain a file named ``setup.py``, provide information about the package
-* Python demo package [rclpy](https://github.com/ros2/examples/tree/dashing/rclpy)
-    * Publisher/Subscriber
-    * Launch 
-    * Service 
-
 ### ROS2 Command
 * run ros2 node 
 ```bash
@@ -101,9 +103,10 @@ ros2 topic list
 ```bash
 ros2 daemon stop
 ```
-### ROS bridge between ROS1 and ROS2
+### ROS2 New Features
+#### ROS bridge between ROS1 and ROS2
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
-### TF2 
+#### TF2 
 1. Broadcasting Transforms
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Transformation: 
@@ -112,6 +115,6 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Static Transformation 
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
-### ROS 2 Quality of Service policies
+#### ROS 2 Quality of Service policies
 Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
  
