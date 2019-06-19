@@ -106,3 +106,6 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Static Transformation 
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
+  
+  
+  [QoS policy](https://design.ros2.org/articles/qos.html)
