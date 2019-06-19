@@ -47,10 +47,12 @@ And then put some packages into the src folder
     * Publisher/Subscriber
     * Launch 
     * Service 
+
 ### Build the workspace
 ```bash
 $ colcon build --symlink-install
 ```
+
 #### Colcon Build options 
 Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/pdf/colcon/latest/colcon.pdf)
  1. Show all output immediately on the console
@@ -81,6 +83,7 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ```bash
   colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
 ```
+
 ## ROS2 Command
 * run ros2 node 
 ```bash
@@ -105,9 +108,12 @@ ros2 topic list
 ```bash
 ros2 daemon stop
 ```
+
 ## ROS2 New Features
+
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+
 ### TF2 
 1. Broadcasting Transforms
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
@@ -117,6 +123,29 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Static Transformation 
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
+
 ### ROS 2 Quality of Service policies
+
+#### Overview and Background
 Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
+
+ROS1 uses TCP as the underlying transport,which is unsuitable for lossy networks such as wireless links. ROS2 uses UDP as its transport, which offers a variety of Quality of Service (QoS) policies. This new feature benefits from the flexibility of controlling the right Quality of Service profile needed for a node to expect and act accordingly(In real-time computing systems where the right Quality of Service profile is needed to meet deadlines).
  
+Reference link: [Difference Between TCP and UDP ](https://enterprise.netscout.com/edge/tech-tips/difference-between-tcp-and-udp)
+
+TCP (Transmission Control Protocol) is connection oriented, whereas UDP (User Datagram Protocol) is connection-less. This means that TCP tracks all data sent, requiring acknowledgment for each octet (generally). UDP does not use acknowledgments at all, and is usually used for protocols where a few lost datagrams do not matter.
+
+#### QoS policies
+Current QoS profile settings: 
+
+* Histrory
+  * Keep last: only store up to N samples, configurable via the queue depth option.
+  * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
+* Depth
+  * Size of the queue: only honored if used together with “keep last”.
+* Reliability
+  * Best effort: attempt to deliver samples, but may lose them if the network is not robust.
+  * Reliable: guarantee that samples are delivered, may retry multiple times.
+* Durability
+  * Transient local: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
+  * Volatile: no attempt is made to persist samples.
