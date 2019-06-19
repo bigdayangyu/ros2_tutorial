@@ -81,7 +81,7 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ```bash
   colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
 ```
-### ROS2 Command
+## ROS2 Command
 * run ros2 node 
 ```bash
 ros2 run <package_name> <executable>
@@ -105,10 +105,10 @@ ros2 topic list
 ```bash
 ros2 daemon stop
 ```
-### ROS2 New Features
-#### ROS bridge between ROS1 and ROS2
+## ROS2 New Features
+### ROS bridge between ROS1 and ROS2
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
-#### TF2 
+### TF2 
 1. Broadcasting Transforms
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Transformation: 
@@ -117,6 +117,6 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Static Transformation 
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
-#### ROS 2 Quality of Service policies
+### ROS 2 Quality of Service policies
 Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
  
