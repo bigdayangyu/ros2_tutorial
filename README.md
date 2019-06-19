@@ -41,6 +41,11 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
   ```
  6. To ignore the package while building 
  insert AMENT_IGNORE into the package 
+ 
+ 6. Clean cmake cache
+```bash
+  colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
+```
  ### Create a new ros2 package
  1. Using command 
  ```bash 
@@ -89,6 +94,8 @@ ros2 daemon stop
 ```
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+### ROS 2 Quality of Service policies
+Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
 
 ### TF2 
 1. Broadcasting Transforms
