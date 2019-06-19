@@ -28,8 +28,8 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
  ```
  3. Build only a single package (or selected packages)
  ```bash
-  $ colcon build --packages-select <name-of-pkg>
-  $ colcon build --packages-select <name-of-pkg> <name-of-another-pkg>
+ $ colcon build --packages-select <name-of-pkg>
+ $ colcon build --packages-select <name-of-pkg> <name-of-another-pkg>
  ```
  4. Build selected packages including their dependencies
  ```bash
@@ -94,9 +94,6 @@ ros2 daemon stop
 ```
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
-### ROS 2 Quality of Service policies
-Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
-
 ### TF2 
 1. Broadcasting Transforms
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
@@ -106,6 +103,6 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 * Broadcast Static Transformation 
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
-  
-  
-  [QoS policy](https://design.ros2.org/articles/qos.html)
+### ROS 2 Quality of Service policies
+Reference link: [ROS2 QoS design](https://design.ros2.org/articles/qos.html)
+ 
