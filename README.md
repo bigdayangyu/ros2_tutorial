@@ -55,59 +55,57 @@ $ colcon build --symlink-install
 
 #### Colcon Build options 
 Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/pdf/colcon/latest/colcon.pdf)
- 1. Show all output immediately on the console
+1. Show all output immediately on the console
  ```bash 
  $ colcon build --event-handlers console_direct+
  ```
- 2. Show all output on the console after a package has finished
+
+2. Build only a single package (or selected packages)
  ```bash
- $ colcon <verb> --event-handlers console_cohesion+
- ```
- 3. Build only a single package (or selected packages)
- ```bash
- $ colcon build --packages-select <name-of-pkg>
  $ colcon build --packages-select <name-of-pkg> <name-of-another-pkg>
  ```
- 4. Build selected packages including their dependencies
+
+3. Build selected packages including their dependencies
  ```bash
  $ colcon build --packages-up-to <name-of-pkg>
  ```
- 5. Rebuild packages which depend on a specific package
- ```bash
- $ colcon build --packages-above <name-of-pkg>
-  ```
- 6. To ignore the package while building 
+
+4. To ignore the package while building 
  insert AMENT_IGNORE into the package 
  
- 6. Clean cmake cache
-```bash
-  colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
-```
+5. Clean cmake cache
+  ```bash
+  $ colcon build --symlink-install --packages-select turtlebot2_drivers --cmake-clean-cache
+  ```
 
 ## ROS2 Command
 * run ros2 node 
-```bash
-ros2 run <package_name> <executable>
-```
+  ```bash
+  ros2 run <package_name> <executable>
+  ```
+
 * ros2 launch
-  * launch file should be saved as `.launch.py`. eg. `my_file.launch.py`
-```bash 
-ros2 launch <package_name> <launch_file>
-```
+    * launch file should be saved as `.launch.py`. eg. `my_file.launch.py`
+    ```bash 
+    ros2 launch <package_name> <launch_file>
+    ```
+
 * ros2 pkg 
-```bash
-ros2 pkg list
-ros2 pkg prefix <package_name>
-```
+    ```bash
+    ros2 pkg list
+    ros2 pkg prefix <package_name>
+    ```
+
 * ros2 topic
-```bash
-ros2 topic echo <topic_name>
-ros2 topic list
-```
+    ```bash
+    ros2 topic echo <topic_name>
+    ros2 topic list
+    ```
+
 * Stop daemon
-```bash
-ros2 daemon stop
-```
+    ```bash
+    ros2 daemon stop
+    ```
 
 ## ROS2 New Features
 
@@ -115,12 +113,13 @@ ros2 daemon stop
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
 
 ### TF2 
-1. Broadcasting Transforms
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
+
+1. Broadcasting Transforms
 * Broadcast Transformation: 
   * `tf2_ros::TransformBroadcaster() ` constructor
   * `tf2_ros::TransformBroadcaster::sendTransform`to send transforms 
-* Broadcast Static Transformation 
+* Broadcast Static Transformation : Use for "latching" behavior when transforms that are not expected to change.
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
 
@@ -136,8 +135,9 @@ Reference link: [Difference Between TCP and UDP ](https://enterprise.netscout.co
 TCP (Transmission Control Protocol) is connection oriented, whereas UDP (User Datagram Protocol) is connection-less. This means that TCP tracks all data sent, requiring acknowledgment for each octet (generally). UDP does not use acknowledgments at all, and is usually used for protocols where a few lost datagrams do not matter.
 
 #### QoS policies
-Current QoS profile settings: 
+Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
+Current QoS profile settings: 
 * Histrory
   * Keep last: only store up to N samples, configurable via the queue depth option.
   * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
