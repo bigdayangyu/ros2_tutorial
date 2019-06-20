@@ -113,15 +113,38 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
 
 ### TF2 
+
+#### Background of TF2 design 
+1. Why `/tf_static`  
+    Reference Link: [TF2 Design](http://wiki.ros.org/tf2/Design)
+
+    tf messages do not deal with low bandwidth networks well. Within a single well connected network tf works fine, but as you transition to wireless and lossy networks with low bandwidth the tf messages start to take up a large fraction of the available bandwidth. This is partially due to the many to many nature and partially due to the fact that there is no way to choose the desired data rate for each consumer.
+
+    **Solution**: Add support for `/tf_static` topic which will only publish latched topics. When the subscriber is not yet established, publisher will store the latest message. Once subscriber being established, the subscriber will not miss the message. 
+
+#### Feature summary 
+
 Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 
 1. Broadcasting Transforms
-* Broadcast Transformation: 
+* Broadcast Transformation:
+  
+  Publish to `/tf` topic
+
   * `tf2_ros::TransformBroadcaster() ` constructor
   * `tf2_ros::TransformBroadcaster::sendTransform`to send transforms 
-* Broadcast Static Transformation : Use for "latching" behavior when transforms that are not expected to change.
+* Broadcast Static Transformation : 
+
+  Publish to `/tf_static` topic.
+
+  Use for "latching" behavior when transforms that are not expected to change.
   * `tf2_ros::StaticTransformBroadcaster()`, constructor,
   * `tf2_ros::StaticTransformBroadcaster::sendTransform` to send static transforms 
+
+2. Transform Listener
+
+    After the TransformListener object is created, it starts receiving tf2 transform over the wire, and buffers them for up to 10 seconds.The TransformListener object should be scoped to persist otherwise it's cache will be unable to fill and almost every query will fail. The common method is to make the TransformaListener object a member variable of a class.  
+
 
 ### ROS 2 Quality of Service policies
 
@@ -138,7 +161,7 @@ TCP (Transmission Control Protocol) is connection oriented, whereas UDP (User Da
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
 Current QoS profile settings: 
-* Histrory
+* History
   * Keep last: only store up to N samples, configurable via the queue depth option.
   * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
 * Depth
@@ -149,3 +172,6 @@ Current QoS profile settings:
 * Durability
   * Transient local: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
   * Volatile: no attempt is made to persist samples.
+
+
+https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
