@@ -11,6 +11,7 @@
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
+5. CMakelist and packge.xml changes in ROS2 
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
