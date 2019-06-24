@@ -12,27 +12,30 @@
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
 5. CMakelist and packge.xml changes in ROS2 
-
+6. ROS2 Launch
+   * Finding Path 
+   * Node Names: launching multiple node with same node name problem
+   * Launch argument 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
 ## Workspace and Packages
-### Source the ros2 enviornment 
+### Source the ROS2 Environment 
 ```bash
 $ source /opt/ros/$ROS_DISTRO/setup.bash
 ```
-### Create a new ros2 workspace
+### Create a new ROS2 workspace
 ```bash
 $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws
 ```
 And then put some packages into the src folder 
-### Create a new ros2 package
+### Create a New ROS2 Package
  1. Using command 
  ```bash 
  $ ros2 pkg create --<package name> [deps]
  ```
- 2. Create Pacakge Manually
+ 2. Create Package Manually
 * Create C++ package
     * The package should contain a file named ``package.xml`` provides meta information about the package
     * The package should contain a file named ``CMakeLists.txt``, provide information about the package and dependencies
@@ -111,7 +114,16 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ## ROS2 New Features
 
 ### ROS bridge between ROS1 and ROS2
-Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+Reference link: [ros1_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+
+1. Dynamic bridge vs Static bridge
+
+  **Dynamic bridge** can automatically open bridges while listening to topics from 
+  both sides. However, inconsistency of received message can close the dynamic bridge and lead to a temporary loss of transfer. 
+
+  **Static bridges** can be modified so that they could pass custom messages of a single topic in one direction only. The performance of Static bridges doesn’t depend on the periodical consistency of the messages. 
+
+2. How to write custom pairs of messages for ros1_bridge 
 
 ### TF2 
 
@@ -158,21 +170,44 @@ Reference link: [Difference Between TCP and UDP ](https://enterprise.netscout.co
 
 TCP (Transmission Control Protocol) is connection oriented, whereas UDP (User Datagram Protocol) is connection-less. This means that TCP tracks all data sent, requiring acknowledgment for each octet (generally). UDP does not use acknowledgments at all, and is usually used for protocols where a few lost datagrams do not matter.
 
+Reference Link:[Why ROS2 does not need a master](https://arxiv.org/pdf/1905.09654.pdf)
+
+ROS1 uses TCP, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other  on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application. 
+
+ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. 
+
 #### QoS policies
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
 Current QoS profile settings: 
+
 * History
+
   * Keep last: only store up to N samples, configurable via the queue depth option.
   * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
+
 * Depth
   * Size of the queue: only honored if used together with “keep last”.
+
 * Reliability
   * Best effort: attempt to deliver samples, but may lose them if the network is not robust.
   * Reliable: guarantee that samples are delivered, may retry multiple times.
+
 * Durability
   * Transient local: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
   * Volatile: no attempt is made to persist samples.
 
 
+The currently-defined QoS profiles for different use case:
+
+* Default QoS settings for publishers and subscribers
+
+
+### ROS2 Launch system
+Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
+
+
+
 https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
+
+[ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
