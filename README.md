@@ -182,7 +182,7 @@ ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distrib
 #### QoS policies
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
-1. Using QoS to send data
+<!-- 1. Using QoS to send data
     * Continuous Data: 
       * **best-effort** : Constantly updating data 
       * **keep-last**   : Sensor data, last value is best
@@ -192,30 +192,30 @@ Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Qua
       * **history** : Recipients need latest and greatest
     * Alarms & Events
       * **liveliness** : Asynchronous messages
-      * **reliability** : Need confirmation of delivery
-
-Current QoS profile setting options: 
+      * **reliability** : Need confirmation of delivery -->
+**1. Current available ROS2 QoS policy options:**
 
 * Deadline
   * A *DataWriter* and a *DataReader* must update data at least once every deadline period. 
 
 * History
   * This controls whether the data transport should deliver only the most recent value, all intermediate values, o deliver something in between, which is configurable via the `depth`(size of the queue) option
-      * Keep last: only store up to N samples, configurable via the queue depth option.
-      * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
+    * **KEEP_LAST**: only store up to N samples, configurable via the queue depth option.
+    * **KEEP_ALL** : store all samples, subject to the configured resource limits of the underlying middleware.
+
 * Depth
   * Size of the queue: only honored if used together with “keep last”.
 
 * Reliability
-  * BEST_EFFERT: data transport is executed ad soon as possible. But may lose them if the network is not robust.
-  * RELIABLE: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
+  * **BEST_EFFERT**: data transport is executed ad soon as possible. But may lose them if the network is not robust.
+  * **RELIABLE**: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
 
 * Durability
   * With this policy, the service attempts to keep several samples so that they can be delivered to any potential late-joining *DataDreader*. The number of saved samples depends on HISTORY. This option has several values, such as the following:
-      * TRANSIENT_LOCAL: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
-      * VOLATILE: no attempt is made to persist samples.
+      * **TRANSIENT_LOCAL**: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
+      * **VOLATILE**: no attempt is made to persist samples.
 
-The currently-defined QoS profiles for different use case:
+**2. The currently-defined QoS profiles for different use case:**
 
 * Default QoS settings for publishers and subscribers: `rmw_qos_profile_default`
   * In order to make the transition from ROS 1 to ROS 2, exercising a similar network behavior is desirable. By default, publishers and subscribers are reliable in ROS 2, have volatile durability, and “keep last” history.
