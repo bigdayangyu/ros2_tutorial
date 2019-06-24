@@ -11,11 +11,14 @@
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
-5. CMakelist and packge.xml changes in ROS2 
+5. Changes in Make system 
+   * ament vs catkin
+   * CMakelist and packge.xml changes in ROS2 
 6. ROS2 Launch
    * Finding Path 
    * Node Names: launching multiple node with same node name problem
    * Launch argument 
+
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
@@ -174,34 +177,57 @@ Reference Link:[Why ROS2 does not need a master](https://arxiv.org/pdf/1905.0965
 
 ROS1 uses TCP, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other  on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application. 
 
-ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. 
+ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is a import point in terms of fault tolerance.
 
 #### QoS policies
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
-Current QoS profile settings: 
+1. Using QoS to send data
+    * Continuous Data: 
+      * **best-effort** : Constantly updating data 
+      * **keep-last**   : Sensor data, last value is best
+      * **ownership, deadline**: Seamless fail over
+    * State Information
+      * **durability** : Occasionally changing persistent data
+      * **history** : Recipients need latest and greatest
+    * Alarms & Events
+      * **liveliness** : Asynchronous messages
+      * **reliability** : Need confirmation of delivery
+
+Current QoS profile setting options: 
+
+* Deadline
+  * A *DataWriter* and a *DataReader* must update data at least once every deadline period. 
 
 * History
-
-  * Keep last: only store up to N samples, configurable via the queue depth option.
-  * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
-
+  * This controls whether the data transport should deliver only the most recent value, all intermediate values, o deliver something in between, which is configurable via the `depth`(size of the queue) option
+      * Keep last: only store up to N samples, configurable via the queue depth option.
+      * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
 * Depth
   * Size of the queue: only honored if used together with “keep last”.
 
 * Reliability
-  * Best effort: attempt to deliver samples, but may lose them if the network is not robust.
-  * Reliable: guarantee that samples are delivered, may retry multiple times.
+  * BEST_EFFERT: data transport is executed ad soon as possible. But may lose them if the network is not robust.
+  * RELIABLE: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
 
 * Durability
-  * Transient local: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
-  * Volatile: no attempt is made to persist samples.
-
+  * With this policy, the service attempts to keep several samples so that they can be delivered to any potential late-joining *DataDreader*. The number of saved samples depends on HISTORY. This option has several values, such as the following:
+      * TRANSIENT_LOCAL: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
+      * VOLATILE: no attempt is made to persist samples.
 
 The currently-defined QoS profiles for different use case:
 
-* Default QoS settings for publishers and subscribers
+* Default QoS settings for publishers and subscribers: `rmw_qos_profile_default`
+  * In order to make the transition from ROS 1 to ROS 2, exercising a similar network behavior is desirable. By default, publishers and subscribers are reliable in ROS 2, have volatile durability, and “keep last” history.
 
+* Services: `rmw_qos_profile_services_default`
+  * In the same vein as publishers and subscribers, services are reliable. It is especially important for services to use volatile durability, as otherwise service servers that re-start may receive outdated requests. While the client is protected from receiving multiple responses, the server is not protected from side-effects of receiving the outdated requests.
+* Sensor data: `rmw_qos_profile_sensor_data`
+  * For sensor data, in most cases it’s more important to receive readings in a timely fashion, rather than ensuring that all of them arrive. That is, developers want the latest samples as soon as they are captured, at the expense of maybe losing some. For that reason the sensor data profile uses best effort reliability and a smaller queue depth.
+* Parameters: `rmw_qos_profile_parameter_events`
+  * Parameters in ROS 2 are based on services, and as such have a similar profile. The difference is that parameters use a much larger queue depth so that requests do not get lost when, for example, the parameter client is unable to reach the parameter service server.
+* System default `rmw_qos_profile_system_default`
+ * This uses the system default for all of the policies.
 
 ### ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
