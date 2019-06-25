@@ -200,26 +200,27 @@ Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Qua
 
 * History
   * This controls whether the data transport should deliver only the most recent value, all intermediate values, o deliver something in between, which is configurable via the `depth`(size of the queue) option
-    * **KEEP_LAST**: only store up to N samples, configurable via the queue depth option.
-    * **KEEP_ALL** : store all samples, subject to the configured resource limits of the underlying middleware.
+    * *KEEP_LAST*: only store up to N samples, configurable via the queue depth option.
+    * *KEEP_ALL* : store all samples, subject to the configured resource limits of the underlying middleware.
 
 * Depth
   * Size of the queue: only honored if used together with “keep last”.
 
 * Reliability
-  * **BEST_EFFERT**: data transport is executed ad soon as possible. But may lose them if the network is not robust.
-  * **RELIABLE**: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
+  * *BEST_EFFERT*: data transport is executed ad soon as possible. But may lose them if the network is not robust.
+  * *RELIABLE*: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
 
 * Durability
   * With this policy, the service attempts to keep several samples so that they can be delivered to any potential late-joining *DataDreader*. The number of saved samples depends on HISTORY. This option has several values, such as the following:
-      * **TRANSIENT_LOCAL**: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
-      * **VOLATILE**: no attempt is made to persist samples.
+      * *TRANSIENT_LOCAL*: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
+      * *VOLATILE*: no attempt is made to persist samples.
 
 **2. The currently-defined QoS profiles for different use case:**
 
+Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/release-latest/rmw/include/rmw/qos_profiles.h)
+
 * Default QoS settings for publishers and subscribers: `rmw_qos_profile_default`
   * In order to make the transition from ROS 1 to ROS 2, exercising a similar network behavior is desirable. By default, publishers and subscribers are reliable in ROS 2, have volatile durability, and “keep last” history.
-
 * Services: `rmw_qos_profile_services_default`
   * In the same vein as publishers and subscribers, services are reliable. It is especially important for services to use volatile durability, as otherwise service servers that re-start may receive outdated requests. While the client is protected from receiving multiple responses, the server is not protected from side-effects of receiving the outdated requests.
 * Sensor data: `rmw_qos_profile_sensor_data`
@@ -231,6 +232,19 @@ Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Qua
 
 ### ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
+
+### Ament Build tool
+#### Overview and Background
+Reference Link [Ament Tutorial](https://index.ros.org/doc/ros2/Tutorials/Ament-Tutorial/)
+
+`ament` is a meta build system to improve building applications which are split into separate packages. It consists of two major parts:
+
+* a build system (e.g. CMake, Python setup tools) to configure, build, and install a single package
+* a tool to invoke the build of individual packages in their topological order
+
+The tool relies on meta information about the packages to determine their dependencies and their build type. This meta information is defined in a manifest file called `package.xml` 
+
+Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
 
 
 
