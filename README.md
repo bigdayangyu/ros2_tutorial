@@ -251,3 +251,4 @@ Each package is built separately with its own build system. In order to make the
 https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
 
 [ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
+[ROS2 Resources](https://github.com/fkromer/awesome-ros2)
