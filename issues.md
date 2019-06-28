@@ -23,14 +23,14 @@
 		After switching from the custom QoS setting to default, cartographer_node works with `StaticTransformBroadcaster` TF messages. Not clear if the QoS setting of `/odom` topic has affected the transform listener of cartographer to receive TF messages from `/tf` topic. 
 
 	* Potential solutions:
-		1. time synchronization: Try to setup gazebo simulation for turtlebot2 and use simulation time to check. Or try to compare and understand the 
+		1. time synchronization: Try to setup gazebo simulation for turtlebot2 and use simulation time to check. 
 
 		2. try different QoS settings. 
 
 2. turtlebot3 ROS2 demo
-	*  turtlebot3_cartographer launch system uses `use_sim_time` as a launch parameter. Under the current ROS2 binary release, If a dictionary of parameters is specified, the node name must also be specified. See https://github.com/ros2/launch/issues/139. However, if keep the node name of cartographer_node. The launch system will launch multiple cartographer_node and cause problem. 
+	*  turtlebot3_cartographer launch system uses `use_sim_time` as a launch parameter. Under the current ROS2 binary release, If a dictionary of parameters is specified, the node name must also be specified. See https://github.com/ros2/launch/issues/139. However, if keep the node name of cartographer_node while launching, the launch system will launch multiple cartographer_node which causes problem. 
 
 	Update on this issue: new commit to the [ros2 repo](https://github.com/ros2/launch_ros/) eliminates the requirement that a node name override be
 specified when passing a dictionary of parameters from launch. [This update](https://github.com/ros2/launch_ros/commit/37929eea57f2c7863207a9f808d8b16b73464de9) has not been pushed to binary release. 
 
-	* turtlebot3_cartographer package uses customized cartographer node(ROBOTIS-GIT repo)[https://github.com/ROBOTIS-GIT/cartographer_ros] which was forked from the [ros2 repo](https://github.com/ros2/cartographer_ros/). ROBOTIS uses customized QoS profile for the turtlebot3 drivers. The latest update from ROBOTIS(dashing branch) was Jun 26, 2019 while the latest update from ROS2 was May 17, 2019
+	* turtlebot3_cartographer package uses customized cartographer_node form [ROBOTIS-GIT repo](https://github.com/ROBOTIS-GIT/cartographer_ros) which was forked from the [ros2 repo](https://github.com/ros2/cartographer_ros/). ROBOTIS uses customized QoS profile for the turtlebot3 drivers. The latest update from ROBOTIS(dashing branch) was Jun 26, 2019 while the latest update from ROS2 was May 17, 2019
