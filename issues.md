@@ -15,7 +15,7 @@
 		odom_and_imu_qos_profile.reliability = RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT;
 		odom_and_imu_qos_profile.durability = RMW_QOS_POLICY_DURABILITY_VOLATILE;
 		```
-		However, under [ros2 repo](https://github.com/ros2/cartographer_ros/), the QoS setting for cartographer_node subscribers was updated to the following(recent issue suggested that`rmw_qos_profile_sensor_data` might be more appropriate)
+		However, under [ros2 repo](https://github.com/ros2/cartographer_ros/), the QoS setting for cartographer_node subscribers was updated to the following(recent [issue](https://github.com/ros2/cartographer_ros/issues/28) suggested that`rmw_qos_profile_sensor_data` might be more appropriate)
 
 		```c++
 		rmw_qos_profile_default
