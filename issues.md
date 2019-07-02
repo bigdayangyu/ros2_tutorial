@@ -34,3 +34,14 @@
 specified when passing a dictionary of parameters from launch. [This update](https://github.com/ros2/launch_ros/commit/37929eea57f2c7863207a9f808d8b16b73464de9) has not been pushed to binary release. 
 
 	* turtlebot3_cartographer package uses customized cartographer_node form [ROBOTIS-GIT repo](https://github.com/ROBOTIS-GIT/cartographer_ros) which was forked from the [ros2 repo](https://github.com/ros2/cartographer_ros/). ROBOTIS uses customized QoS profile for the turtlebot3 drivers. The latest update from ROBOTIS(dashing branch) was Jun 26, 2019 while the latest update from ROS2 was May 17, 2019
+
+
+### ROS2 Gazebo open issue 
+```xml
+<export>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+    <gazebo_ros gazebo_media_path="${prefix}/models"/>
+</export>
+```
+This feature is not yet working for ROS2 
+https://github.com/ros-simulation/gazebo_ros_pkgs/pull/925
