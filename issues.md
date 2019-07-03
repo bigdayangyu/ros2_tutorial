@@ -45,3 +45,9 @@ specified when passing a dictionary of parameters from launch. [This update](htt
 ```
 This feature is not yet working for ROS2 
 https://github.com/ros-simulation/gazebo_ros_pkgs/pull/925
+Progress of gazebo_ros_pkgs
+https://github.com/ros-simulation/gazebo_ros_pkgs/issues/512
+
+```bash
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/ros2_ws_test/src/kobuki_gazebo_demo/models
+```
