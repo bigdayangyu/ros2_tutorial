@@ -177,7 +177,7 @@ Reference Link:[Why ROS2 does not need a master](https://arxiv.org/pdf/1905.0965
 
 ROS1 uses TCP, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other  on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application. 
 
-ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is a import point in terms of fault tolerance.
+ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is a important point in terms of fault tolerance.
 
 #### QoS policies
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)

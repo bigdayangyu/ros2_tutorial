@@ -46,14 +46,20 @@ Give your conclusion of the completeness of ROS2 in SLAM and navigation.
 ## Reference Knowledge 
 
 ### ROS2 Background 
-[why ROS2](http://design.ros2.org/articles/why_ros2.html)
-
 Robot Operating System (ROS) is a robotics middleware that was created by Willow Garage and Stanford University, ROS provide a frameworks for robotics software development. ROS provides functions such as hardware abstraction, device control, message passing, package management and libraries for different functionalities. 
 
-ROS1 uses TCPROS/UDPROS as its communication system, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application. 
+Reference Link: [why ROS2](http://design.ros2.org/articles/why_ros2.html)
 
-Reference Link:[Why ROS2 does not need a master](https://arxiv.org/pdf/1905.09654.pdf)
+ROS1 uses TCPROS/UDPROS as its communication system, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application or multi-robot system. 
 
+Reference Link: [Why ROS2 does not need a master](https://arxiv.org/pdf/1905.09654.pdf)
+
+With the growing demand of cross operating system platform and real-time functionality from the ROS community, ROS2 was developed by Open Robotics Foundation(OSRF). 
+
+Compare to ROS1, ROS2 uses Data Distribution Service (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is a important point in terms of fault tolerance.
+
+
+### ROS2 Cartographer
 
 
 ### ROS Navigation stack 
