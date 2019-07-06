@@ -11,27 +11,34 @@
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
+5. Changes in Make system 
+   * ament vs catkin
+   * CMakelist and packge.xml changes in ROS2 
+6. ROS2 Launch
+   * Finding Path 
+   * Node Names: launching multiple node with same node name problem
+   * Launch argument 
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
 
 ## Workspace and Packages
-### Source the ros2 enviornment 
+### Source the ROS2 Environment 
 ```bash
 $ source /opt/ros/$ROS_DISTRO/setup.bash
 ```
-### Create a new ros2 workspace
+### Create a new ROS2 workspace
 ```bash
 $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws
 ```
 And then put some packages into the src folder 
-### Create a new ros2 package
+### Create a New ROS2 Package
  1. Using command 
  ```bash 
  $ ros2 pkg create --<package name> [deps]
  ```
- 2. Create Pacakge Manually
+ 2. Create Package Manually
 * Create C++ package
     * The package should contain a file named ``package.xml`` provides meta information about the package
     * The package should contain a file named ``CMakeLists.txt``, provide information about the package and dependencies
@@ -110,7 +117,16 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ## ROS2 New Features
 
 ### ROS bridge between ROS1 and ROS2
-Reference link: [ros2_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+Reference link: [ros1_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
+
+1. Dynamic bridge vs Static bridge
+
+  **Dynamic bridge** can automatically open bridges while listening to topics from 
+  both sides. However, inconsistency of received message can close the dynamic bridge and lead to a temporary loss of transfer. 
+
+  **Static bridges** can be modified so that they could pass custom messages of a single topic in one direction only. The performance of Static bridges doesn’t depend on the periodical consistency of the messages. 
+
+2. How to write custom pairs of messages for ros1_bridge 
 
 ### TF2 
 
@@ -157,21 +173,82 @@ Reference link: [Difference Between TCP and UDP ](https://enterprise.netscout.co
 
 TCP (Transmission Control Protocol) is connection oriented, whereas UDP (User Datagram Protocol) is connection-less. This means that TCP tracks all data sent, requiring acknowledgment for each octet (generally). UDP does not use acknowledgments at all, and is usually used for protocols where a few lost datagrams do not matter.
 
+Reference Link:[Why ROS2 does not need a master](https://arxiv.org/pdf/1905.09654.pdf)
+
+ROS1 uses TCP, so ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other  on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time application. 
+
+ROS2 uses [Data Distribution Service](https://en.wikipedia.org/wiki/Data_Distribution_Service) (DDS) as the communication middleware. ROS2 provides a Middleware Interface(RMW) that allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is a important point in terms of fault tolerance.
+
 #### QoS policies
 Reference Link: [QoS policies](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 
-Current QoS profile settings: 
+<!-- 1. Using QoS to send data
+    * Continuous Data: 
+      * **best-effort** : Constantly updating data 
+      * **keep-last**   : Sensor data, last value is best
+      * **ownership, deadline**: Seamless fail over
+    * State Information
+      * **durability** : Occasionally changing persistent data
+      * **history** : Recipients need latest and greatest
+    * Alarms & Events
+      * **liveliness** : Asynchronous messages
+      * **reliability** : Need confirmation of delivery -->
+**1. Current available ROS2 QoS policy options:**
+
+* Deadline
+  * A *DataWriter* and a *DataReader* must update data at least once every deadline period. 
+
 * History
-  * Keep last: only store up to N samples, configurable via the queue depth option.
-  * Keep all: store all samples, subject to the configured resource limits of the underlying middleware.
+  * This controls whether the data transport should deliver only the most recent value, all intermediate values, o deliver something in between, which is configurable via the `depth`(size of the queue) option
+    * *KEEP_LAST*: only store up to N samples, configurable via the queue depth option.
+    * *KEEP_ALL* : store all samples, subject to the configured resource limits of the underlying middleware.
+
 * Depth
   * Size of the queue: only honored if used together with “keep last”.
+
 * Reliability
-  * Best effort: attempt to deliver samples, but may lose them if the network is not robust.
-  * Reliable: guarantee that samples are delivered, may retry multiple times.
+  * *BEST_EFFERT*: data transport is executed ad soon as possible. But may lose them if the network is not robust.
+  * *RELIABLE*: missed samples are retransmitted, therefore, sample delivery is guaranteed delivered. may retry multiple times.
+
 * Durability
-  * Transient local: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
-  * Volatile: no attempt is made to persist samples.
+  * With this policy, the service attempts to keep several samples so that they can be delivered to any potential late-joining *DataDreader*. The number of saved samples depends on HISTORY. This option has several values, such as the following:
+      * *TRANSIENT_LOCAL*: the publisher becomes responsible for persisting samples for “late-joining” subscribers.
+      * *VOLATILE*: no attempt is made to persist samples.
+
+**2. The currently-defined QoS profiles for different use case:**
+
+Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/release-latest/rmw/include/rmw/qos_profiles.h)
+
+* Default QoS settings for publishers and subscribers: `rmw_qos_profile_default`
+  * In order to make the transition from ROS 1 to ROS 2, exercising a similar network behavior is desirable. By default, publishers and subscribers are reliable in ROS 2, have volatile durability, and “keep last” history.
+* Services: `rmw_qos_profile_services_default`
+  * In the same vein as publishers and subscribers, services are reliable. It is especially important for services to use volatile durability, as otherwise service servers that re-start may receive outdated requests. While the client is protected from receiving multiple responses, the server is not protected from side-effects of receiving the outdated requests.
+* Sensor data: `rmw_qos_profile_sensor_data`
+  * For sensor data, in most cases it’s more important to receive readings in a timely fashion, rather than ensuring that all of them arrive. That is, developers want the latest samples as soon as they are captured, at the expense of maybe losing some. For that reason the sensor data profile uses best effort reliability and a smaller queue depth.
+* Parameters: `rmw_qos_profile_parameter_events`
+  * Parameters in ROS 2 are based on services, and as such have a similar profile. The difference is that parameters use a much larger queue depth so that requests do not get lost when, for example, the parameter client is unable to reach the parameter service server.
+* System default `rmw_qos_profile_system_default`
+ * This uses the system default for all of the policies.
+
+### ROS2 Launch system
+Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
+
+### Ament Build tool
+#### Overview and Background
+Reference Link [Ament Tutorial](https://index.ros.org/doc/ros2/Tutorials/Ament-Tutorial/)
+
+`ament` is a meta build system to improve building applications which are split into separate packages. It consists of two major parts:
+
+* a build system (e.g. CMake, Python setup tools) to configure, build, and install a single package
+* a tool to invoke the build of individual packages in their topological order
+
+The tool relies on meta information about the packages to determine their dependencies and their build type. This meta information is defined in a manifest file called `package.xml` 
+
+Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
+
 
 
 https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
+
+[ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
+[ROS2 Resources](https://github.com/fkromer/awesome-ros2)
