@@ -27,12 +27,16 @@ ROS1 uses TCP (Transmission Control Protocol) as its communication protocol. TCP
 
 ROS2 uses Data Distribution Service (DDS) as the communication middleware. UDP is a Data-Centric-Publish-Subscribe(DCPS) model, and this model will create global data space for individual applications to exchange information. DDS will identify a data object by its topic name and then subscribe to this topic, therefore, DDS does not have a central distributor for all information. The DDS publish-subscribe model avoids complex network programming for distributed applications.  ROS2 provides an abstraction layer of DDS, so users do not need to pay attention to the underlying DDS structure. The ROS2 Middleware Interface(RMW) allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is an important point in terms of fault tolerance.
 
+### 1.4 ROS2 Build System 
+
 ## II. Related Work
 When ROS2 Bouncy was released, a TurtleBot 2 demo was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps.  
 
 ## III. Method
 The objective of this demo is to build a kobuki SLAM and navigation demo on top of the existing TurtleBot 2 demo, and update packages so that the kobuki robot can achieve SLAM and autonomous navigation using the latest ROS 2 Dashing Diademata release. 
 
+
+### Hardware and software setup
 1.  Hardware setup 
 	1. Robot: Kobuki (turtlebot2)
 	2. Sensor: hokuyo laser scanner
@@ -57,6 +61,14 @@ The objective of this demo is to build a kobuki SLAM and navigation demo on top 
 	2. Setup laser scan
 	3. Run cartographer in simulation 
 	4. After getting map, try the navigation stack
+
+### Implementation 
+
+1. Change CmakeList.txt and package.xml
+2. Build all packages using colcon build 
+3. Manually control robot and use Goolge Cartographer to get the map 
+4. Visualization using ros1_bridge 
+
 
 ## IV. Results
 Describe your results in teleoperation, mapping, localization, and navigation.V. DiscussionIntroduce your thoughts of new features ROS2 while doing the implementation. Describe the problems you encountered and your understanding of the solution.
