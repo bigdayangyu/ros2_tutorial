@@ -22,17 +22,41 @@ Compare to ROS1, ROS2 has the following support for robotics applications:
 * *Production environments*:
 * *Small embedded platforms*:
 
-### ROS2 Communication 
+### 1.3 ROS2 Communication 
 ROS1 uses TCP (Transmission Control Protocol) as its communication protocol. TCP is a connection oriented network, this means that TCP tracks all data sent, requiring acknowledgment for each octet (generally), therefore,  ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time applications or multi-robot systems.
 
 ROS2 uses Data Distribution Service (DDS) as the communication middleware. UDP is a Data-Centric-Publish-Subscribe(DCPS) model, and this model will create global data space for individual applications to exchange information. DDS will identify a data object by its topic name and then subscribe to this topic, therefore, DDS does not have a central distributor for all information. The DDS publish-subscribe model avoids complex network programming for distributed applications.  ROS2 provides an abstraction layer of DDS, so users do not need to pay attention to the underlying DDS structure. The ROS2 Middleware Interface(RMW) allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is an important point in terms of fault tolerance.
 
 ## II. Related Work
-
-Early efforts with demos in turtlebot and recent changes. What solution is used to setup a navigation and SLAM system on turtlebot.
+When ROS2 Bouncy was released, a TurtleBot 2 demo was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps.  
 
 ## III. Method
-Define your implementation of SLAM and navigation with ROS2 in simulation and on real robot.Define your solution, like hardware platform setup, software components, user interface etc.
+The objective of this demo is to build a kobuki SLAM and navigation demo on top of the existing TurtleBot 2 demo, and update packages so that the kobuki robot can achieve SLAM and autonomous navigation using the latest ROS 2 Dashing Diademata release. 
+
+1.  Hardware setup 
+	1. Robot: Kobuki (turtlebot2)
+	2. Sensor: hokuyo laser scanner
+
+2. ROS2 Packages:
+	1. mapping: 
+		1. cartographer (binary release available)
+		2. cartographer-ros 
+	2. Visualization:
+		1. ros1_bridge (binary release available)
+		2. rviz 
+	3. Controller and drivers:
+		1. teleop_twist_keyboard (binary release available)
+		2. urg_node: URG laser scan driver 
+		3. tutlebot2_drivers: provide kobuki_node to drive the Kobuki Robot
+	3. Simulation: 
+		1. Gazebo9 simulation (binary release available)
+	4. Navigation 
+		1. navigation2 (still under heavy development)
+3. Simulation Plan
+	1. Setup gazebo for kobuki
+	2. Setup laser scan
+	3. Run cartographer in simulation 
+	4. After getting map, try the navigation stack
 
 ## IV. Results
 Describe your results in teleoperation, mapping, localization, and navigation.V. DiscussionIntroduce your thoughts of new features ROS2 while doing the implementation. Describe the problems you encountered and your understanding of the solution.
@@ -41,29 +65,6 @@ Describe your results in teleoperation, mapping, localization, and navigation.V.
 Give your conclusion of the completeness of ROS2 in SLAM and navigation.
 
 ## VII. Reference
-
-1.  Hardware setup 
-	1. Robot: Kobuki (turtlebot2)
-	2. Sensor: hokuyo laser scanner
-2. Controller: keyboard 
-3. ROS2 Packages:
-	1. mapping: 
-		1. urg_node
-		2. kobuki_node (tutlebot2_drivers)
-		3. cartographer
-	2. Visualization:
-		1. ros1_bridge
-		2. rviz 
-
-	3. Simulation: 
-		1. Gazebo9 simulation
-	4. Navigation 
-		1. navigation2 ?
-4. Simulation Plan
-	1. Setup gazebo for kobuki
-	2. Setup laser scan
-	3. Run cartographer in simulation 
-	4. After getting map, try the navigation stack
 
 ## Reference Knowledge 
 
