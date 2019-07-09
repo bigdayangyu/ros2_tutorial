@@ -44,12 +44,12 @@ ROS2 for Robot Mapping and Navigation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 \subsection{Robot Operating System Background}
-Robot Operating System (ROS) is a robotics middleware that was created by Willow Garage and Stanford University and now maintained by Open Source Robotics Foundation(OSRF)\cite{c2}.  As an open source framework for various robotics software development, ROS provides functions such as hardware abstraction, device control, message passing, package management and libraries for different functionalities. The modularity of ROS allows users to focus on application development rather than spending much effort to reinvent the wheel.
+Robot Operating System (ROS) is a robotics middleware that was created by Willow Garage and Stanford University and now maintained by Open Source Robotics Foundation(OSRF)\cite{c2}.  As an open source framework for various robotics software development, ROS provides functions such as hardware abstraction, device control, message passing, package management and libraries for different functionalities. The modulated packages of ROS allows users to focus on application development rather than spending much effort to reinvent the wheel.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{ROS2 Design Background}
 ROS was originally designed for PR2 use case. PR2 robot works as a standalone robot with excellent network connectivity, also PR2 applications are mostly research based, therefore the early design concept of ROS does not need to consider real-time problems.
 
-Nowadays ROS has gained tremendous popularity in robotics community, and the use cases has grown beyond the scope of academia and scientific research. Many robotics applications such as  industrial robots, outdoor robots(for example driver-less cars), unmanned aerial vehicles(UVA) have become more and more complicated, as a result, those applications have higher demand on the robust real-time performance of the robot operating system. Although ROS1 is still a very popular development tool in the field of robotics, the limitations of the original design have become a driving force of the new ROS2 design. 
+Nowadays ROS has gained tremendous popularity in robotics community, and the use cases has grown beyond the scope of academia and scientific research. Many robotics applications such as  industrial robots, outdoor robots(for example driver-less cars), unmanned aerial vehicles(UVA) have become more and more complicated, as a result, those applications have higher demand on the robust real-time performance of the robot operating system. Although ROS1 is still a very popular development tool in the field of robotics, the limitations of the original design have become a driving force of the new ROS2 design\cite{c3}. 
 
 With the growing demand of cross operating system platform and real-time functionality from the ROS community, ROS2 development was first announced at ROSCon 2014, and the first alpha version was launched in August 2015. On December 8, 2017, the highly anticipated ROS 2.0 finally released its first official version, Ardent Apalone. As of 2019, the newest version ROS 2 Dashing Diademata was released on May 30.
 
@@ -144,12 +144,12 @@ The objective of this demo is to build a kobuki SLAM and navigation demo on top 
 1. \textit{Setup Build files} \par \vspace{5pt}
  ROS2 uses a build system called Ament Build tool. Ament is an evolution of catkin that automatically build a set of independent packages base on their dependency topological order. Ament will also install and configure the environment for packages, so the user does not need to follow a specific dependency order to build packages. The package.xml will provide meta information about the packages and their dependencies, and the build configuration are stored in the CMakeList.txt  \par \vspace{5pt}
  
-2. \textit{packages using colcon build}\par\vspace{5pt}
-ROS1 has multiple different building tools such as catkin\_make, catkin\_make\_isolated and catkin\_tools. ROS 2 provides a universal build tool called Colcon. This colcon tool makes the building testing and using multiple packages easy. \par\vspace{5pt}
+2. \textit{Build packages using colcon build}\par\vspace{5pt}
+ROS1 has multiple different building tools such as catkin\_make, catkin\_make\_isolated and catkin\_tools. ROS 2 provides a universal build tool called colcon. This colcon tool makes the building testing and using multiple packages easy. \par\vspace{5pt}
 
 3. \textit{Manual mapping using Cartographer}\par\vspace{5pt}
 % launch system 
-This demo uses teleop-keyboard to manully operate the Kobuki robot. The cartographer node utilizes the laser scan data obtained from the hokuyo laser scanner and the optometry information published though the kobuki\_node robot driver and create a 2D map. 
+This demo uses teleop-keyboard to manually operate the Kobuki robot. The cartographer node utilizes the laser scan data obtained from the hokuyo laser scanner and the optometry information published though the kobuki\_node robot driver and create a 2D map. 
 This demo uses teleo-keyboard to operate the Kobuki robot, and obtain a map using google cartographer. The rqt\_graph is show in figure \ref{fig:rqt}\par\vspace{5pt}
 \begin{figure}[ht]
   \includegraphics[width=\linewidth]{qrt_graph.png}
@@ -157,11 +157,10 @@ This demo uses teleo-keyboard to operate the Kobuki robot, and obtain a map usin
   \label{fig:rqt}
 \end{figure}
 4.\textit{Data visualization using ros1\_bridge}\par\vspace{5pt} 
-Due to the unstable behavior of rviz2 provided in ROS 2, this demo uses ros1\_bridge to pass data into ROS1 to visualize the map obtained by cartographer. ros1\_bridge provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2. This bridge will establish connection when matching publisher-subscriber pairs are active to a topic on either side of the bridge. The current version supports most of the common message types in ROS 1 and ROS 2, user can also create their own customized message pairs through a package mapping rule file that matches all messages with the same names and fields within a pair of packages.\par\vspace{5pt} 
+Due to the unstable behavior of rviz2 provided in ROS 2, this demo uses ros1\_bridge to pass data into ROS1 to visualize the map obtained by cartographer. ros1\_bridge provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2. This bridge will establish connection when matching publisher-subscriber pairs are active to a topic on either side of the bridge\cite{c4}. The current version supports most of the common message types in ROS 1 and ROS 2, user can also create their own customized message pairs through a package mapping rule file that matches all messages with the same names and fields within a pair of packages.\par\vspace{5pt} 
 
 5. \textit{Simulation Setup} 
 TODO
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{results}
@@ -199,6 +198,7 @@ The map shown in figure \ref{fig:map} was obtained by driving the robot in a roo
 
 \bibitem{c1} Y. Maruyama, S. Kato, and T. Azumi, “Exploring the performance of ROS2,” Proceedings of the 13th International Conference on Embedded Software - EMSOFT 16, 2016. 
 \bibitem{c2} Open Source Robotics Foundation(OSRF) http://www.osrfoundation.org/.
-
+\bibitem{c3} Gerkey, B. (2019). Why ROS 2?. [online] Design.ros2.org. Available at: https://design.ros2.org/articles/why\_ros2.html [Accessed 9 Jul. 2019].
+\bibitem{c4} GitHub. (2019). ros2/ros1\_bridge. [online] Available at: https://github.com/ros2/ros1\_bridge [Accessed 9 Jul. 2019].
 \end{thebibliography}
 \end{document}
