@@ -108,11 +108,17 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     ros2 topic echo <topic_name>
     ros2 topic list
     ```
+* ros2 param 
+    ```bash 
+    ros2 param get \NODE_NAME PARAM
+    ros2 param get /cartographer_node use_sim_time
+    ```
 
 * Stop daemon
     ```bash
     ros2 daemon stop
     ```
+
 
 ## ROS2 New Features
 
