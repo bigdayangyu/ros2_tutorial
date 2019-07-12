@@ -108,7 +108,12 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     ros2 topic echo <topic_name>
     ros2 topic list
     ```
-
+* ros2 parameter 
+    ```bash
+    ros2 param list
+    ros2 param set node_name Parameter value
+    ros2 param set catographer_node use_sim_time true
+    ```
 * Stop daemon
     ```bash
     ros2 daemon stop

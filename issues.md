@@ -51,3 +51,6 @@ https://github.com/ros-simulation/gazebo_ros_pkgs/issues/512
 ```bash
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/ros2_ws_test/src/kobuki_gazebo_demo/models
 ```
+
+### ROS2 robot_state_publisher issue 
+Does not response to use_time_time. This issue was resolve recently [link](https://github.com/ros2/robot_state_publisher/commit/24f91eda34cac78e3a368bbc9dfa72a797aeeaef)
