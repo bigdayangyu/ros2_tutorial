@@ -13,8 +13,9 @@
 \overrideIEEEmargins
 % See the \addtolength command later in the file to balance the column lengths
 % on the last page of the document
-
+\usepackage{subcaption}
 \usepackage{graphicx}
+
 \graphicspath{{./graph/}}
 
 % The following packages can be found on http:\\www.ctan.org
@@ -53,14 +54,14 @@ Nowadays ROS has gained tremendous popularity in robotics community, and the use
 
 With the growing demand of cross operating system platform and real-time functionality from the ROS community, ROS2 development was first announced at ROSCon 2014, and the first alpha version was launched in August 2015. On December 8, 2017, the highly anticipated ROS 2.0 finally released its first official version, Ardent Apalone. As of 2019, the newest version ROS 2 Dashing Diademata was released on May 30.
 
-Compare to ROS1, ROS2 has the following support for robotics applications: 
+Compare to ROS1, ROS2 has the following support for robotics applications\cite{c3}: 
 \begin{itemize}
   \item \textbf{Cross-system platform support}: ROS2 support for Linux, Windows and macOS as well as the real-time operating system(RTOS).
   \item \textbf{Multi-robot system support}: Improved communication system allows robust network performance for multi-robot system 
   \item \textbf{Real-time control}: support to improve the timeliness of a robot control application and overall robot performance
-  \item \textbf{Non-ideal networks}:
-  \item \textbf{Production environments}:
-  \item \textbf{Small embedded platforms}:
+  \item \textbf{Non-ideal networks}: Support robot appications such as UAV, underground robot or underwater robot that has bad networks connection compare to indoor robots 
+  \item \textbf{Production environments}: ROS 1 has target users as research labs, while ROS 2 is suitable for real-world applications. 
+  \item \textbf{Small embedded platforms}:ROS 2 does not rely on a master to distribute messages, and its native UDP communication system performs much better on distributed embedded system\cite{c6}. 
 \end{itemize}
 
 \subsection{ROS2 Communication}
@@ -75,7 +76,9 @@ ROS1 uses TCP (Transmission Control Protocol) as its communication protocol. TCP
 ROS2 uses Data Distribution Service (DDS) as the communication middleware. UDP is a Data-Centric-Publish-Subscribe(DCPS) model, and this model will create global data space for individual applications to exchange information. DDS will identify a data object by its topic name and then subscribe to this topic, therefore, DDS does not have a central distributor for all information. The DDS publish-subscribe model avoids complex network programming for distributed applications.  ROS2 provides an abstraction layer of DDS, so users do not need to pay attention to the underlying DDS structure. The ROS2 Middleware Interface(RMW) allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is an important point in terms of fault tolerance.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-When ROS2 Bouncy was released, a TurtleBot 2 demo was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps. 
+When ROS 2 Bouncy was released, a TurtleBot 2 demo was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps. 
+
+After ROS 2 Dashing was released, The manufacturer of TurtleBot 3 ROBOTIS\cite{c5} provided a TurtleBot 3 demo that runs ROS 2 dashing. TurtleBot 3 demo includes robot mapping and navigation, so this demo for kobuki robot is based on the work of TurtleBot 3. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Method}
 The objective of this demo is to build a kobuki SLAM and navigation demo on top of the existing TurtleBot 2 demo, and update packages so that the kobuki robot can achieve SLAM and autonomous navigation using the latest ROS 2 Dashing Diademata release. 
@@ -105,6 +108,12 @@ The objective of this demo is to build a kobuki SLAM and navigation demo on top 
             \end{itemize}{}
     \end{itemize}{}
     \begin{itemize}
+        \item Navigatoin
+            \begin{itemize}
+                \item Navigation2 
+            \end{itemize}{}
+    \end{itemize}{}
+    \begin{itemize}
         \item Visualization
             \begin{itemize}
                 \item ros1\_bridge (binary release available)
@@ -125,12 +134,12 @@ The objective of this demo is to build a kobuki SLAM and navigation demo on top 
 \end{itemize}{}
 
 \begin{itemize}
-    \item Simulation Plan (TODO)
+    \item Simulation 
         \begin{itemize}
-            \item Setup gazebo for kobuki
-            \item Setup laser scan
-            \item Run cartographer in simulation 
-            \item After getting map, try the navigation stack
+            \item Gazebo simulation environment 
+            \item kobuki model 
+            \item Gazebo differential drive plug-in  
+            \item Gazebo sensor plug-in 
         \end{itemize}{}
 \end{itemize}{}
 
@@ -159,9 +168,16 @@ This demo uses teleo-keyboard to operate the Kobuki robot, and obtain a map usin
 4.\textit{Data visualization using ros1\_bridge}\par\vspace{5pt} 
 Due to the unstable behavior of rviz2 provided in ROS 2, this demo uses ros1\_bridge to pass data into ROS1 to visualize the map obtained by cartographer. ros1\_bridge provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2. This bridge will establish connection when matching publisher-subscriber pairs are active to a topic on either side of the bridge\cite{c4}. The current version supports most of the common message types in ROS 1 and ROS 2, user can also create their own customized message pairs through a package mapping rule file that matches all messages with the same names and fields within a pair of packages.\par\vspace{5pt} 
 
-5. \textit{Simulation Setup} 
-TODO
+5. \textit{Simulation Setup} \par\vspace{5pt} 
+In this demo, the simulation environment was modeled as the Bosch Sunnyvale office. The simulated office settings shown in figure\ref{fig:gazebo}  as has walls and desks as obstacles for the robot to perform mapping and navigation. \begin{figure}[ht]
+  \includegraphics[width=\linewidth]{gazebo_simulation.png}
+  \caption{Kobuki and laser scanner in Gazebo 9 Simulation } 
+  \label{fig:gazebo}
+\end{figure}
+\par\vspace{5pt} 
 
+6. \textit{Navigation in simulation} \par\vspace{5pt} 
+Kobuki navigation uses the navigation2 packages to navigate through the map obtained by google cartographer. The navigation 2 package is designed for ROS 2 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{results}
 \subsection{Robot Mapping}
@@ -172,14 +188,29 @@ The map shown in figure \ref{fig:map} was obtained by driving the robot in a roo
   \label{fig:map}
 \end{figure}
 \subsection{Gazebo 9 Simulation}
-\begin{figure}[ht]
-  \includegraphics[width=\linewidth]{gazebo_simulation.png}
-  \caption{Kobuki and laser scanner in Gazebo 9 Simulation } 
-  \label{fig:gazebo}
+The AMCL localization and navigation works well in simulation. However, due to lack of landmarks, the localization result is highly depend on how the use select the initial position.
+    \begin{figure}[ht]
+    \begin{subfigure}[b]{0.5\textwidth}
+       \includegraphics[width=1\linewidth]{navigation.png}
+       \caption{Starting point of navigation}
+       \label{fig:Ng1} 
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.5\textwidth}
+       \includegraphics[width=1\linewidth]{navigation2.png}
+       \caption{Midpoint of the navigation}
+       \label{fig:Ng2}
+    \end{subfigure}
 \end{figure}
+
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{navigation_detail.png}
+  \caption{Detailed navigation result} 
+  \label{fig:navigation_detail}
+\end{figure}{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}\label{conclusions}
-
+ROS 2 is a amazing tool for Robotics application development. However, ROS 2 is still under heavy development, packages are constantly being updated, therefore it might still be too early to fully adapt ROS 2. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reference}\label{reference}
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
@@ -199,6 +230,8 @@ The map shown in figure \ref{fig:map} was obtained by driving the robot in a roo
 \bibitem{c1} Y. Maruyama, S. Kato, and T. Azumi, “Exploring the performance of ROS2,” Proceedings of the 13th International Conference on Embedded Software - EMSOFT 16, 2016. 
 \bibitem{c2} Open Source Robotics Foundation(OSRF) http://www.osrfoundation.org/.
 \bibitem{c3} Gerkey, B. (2019). Why ROS 2?. [online] Design.ros2.org. Available at: https://design.ros2.org/articles/why\_ros2.html [Accessed 9 Jul. 2019].
+\bibitem{c6}Ros.org. (2019). Morgan Quigley (OSRF): ROS 2 on "Small" Embedded Systems - ROS robotics news. [online] Available at: http://www.ros.org/news/2016/03/morgan-quigley-osrf-ros-2-on-small-embedded-systems.html [Accessed 15 Jul. 2019].
 \bibitem{c4} GitHub. (2019). ros2/ros1\_bridge. [online] Available at: https://github.com/ros2/ros1\_bridge [Accessed 9 Jul. 2019].
+\bibitem{c5} ROBOTIS. (2019). ROBOTIS. [online] Available at: http://en.robotis.com/ [Accessed 15 Jul. 2019].
 \end{thebibliography}
 \end{document}
