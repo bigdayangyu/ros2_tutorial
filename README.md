@@ -122,6 +122,15 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 
 ## ROS2 New Features
 
+### ROS structure 
+User Code ---> rclcpp/py---> rcl ---> rmw ---> rmw_
+1. *rclcpp/rclpy* language specific ROS clients libraries 
+2. *rcl* c Library 
+3. *rmw* ROS middleware interface: hide specific DDS implementation and streamline QoS configuration
+4. *rmw_* DDS adapters
+
+
+
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros1_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
 
