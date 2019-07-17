@@ -183,7 +183,33 @@ os.environ['GAZEBO_MODEL_PATH'] =
 gazebo_model_path
 \end{verbatim}
 \end{small}
-\par\vspace{2pt}
+ROS 2 launch system also provides APIs to set the environment variable inside the \textit{LaunchDescription} return statement.
+\begin{small}
+\begin{verbatim}
+launch.actions.SetEnvironmentVariable(
+    'GAZEBO_MODEL_PATH', gazebo_model_path)
+\end{verbatim}
+\end{small}
+\par\vspace{1pt}
+
+This new launch system also allows users to specify command line argument options, and this gives user more flexibility for different settings. For example, simulations often requires the clock time to be set to simulation time, this command line tool allows user to choose parameter setting when launching the application. This following code shows how to declare launch argument in the launch file. 
+\begin{small}
+\begin{verbatim}
+launch.actions.DeclareLaunchArgument(
+ 'use_sim_time', default_value='false',
+  description='simulation clock if true')
+\end{verbatim}
+\end{small}
+\par\vspace{1pt}
+It is easy to launch files with command line argument, this following example shows how to launch the Kobuki gazebo demo with simulation time. 
+\begin{small}
+\begin{verbatim}
+ros2 launch kobuki_gazebo_demo \ 
+kobuki_SYV_office.launch.py \ 
+use_sim_time:=True
+\end{verbatim}
+\end{small}
+\par\vspace{1pt}
 Also ROS 2 has a new system of setting parameters in launch files. ROS 2 stores parameters of a node in a \textit{.yaml} file and pass the \textit{.yaml} file as a launch argument. The following code shows a example of launching urg\_node in this demo: \par\vspace{2pt}
 \begin{small}
 \begin{verbatim}
@@ -217,28 +243,35 @@ urg_node:
     skip: 0
 \end{verbatim}
 \end{small}{}
+
 6. \textit{Simulation Setup} \par\vspace{5pt} 
-In this demo, simulation environment was modeled as the Bosch Sunnyvale office. The simulated office settings shown in figure\ref{fig:gazebo} has walls and desks as obstacles for the robot to perform mapping and navigation. \begin{figure}[ht]
+In this demo, simulation environment was modeled as the Bosch Sunnyvale office. The simulated office settings shown in figure\ref{fig:gazebo} has walls and desks as obstacles for the robot to perform mapping and navigation.
+\begin{figure}[htp!]
   \includegraphics[width=\linewidth]{gazebo_simulation.png}
   \caption{Kobuki and laser scanner in Gazebo 9 Simulation } 
   \label{fig:gazebo}
 \end{figure}
-\par\vspace{5pt} 
 
 7. \textit{Navigation in simulation} \par\vspace{5pt} 
 The navigation 2 package is designed for ROS 2, just like the original navigation stack in ROS 1, navigation 2 enables a robot to autonomously reach a goal state. Kobuki navigation uses the navigation2 packages to navigate through the map obtained by google cartographer. Given a robot initial pose, and a goal pose shown in rviz map, navigation 2 will generate a path plan and send command to the drive the robot. The robot will reach the goal while avoiding obstacles along the path. 
+
+Navigation 2 package has several changes compare to Navigation in ROS 1. In ROS 1, the move\_base package links a global and local planner together to accomplish its global navigation task\cite{c8}. However in ROS 2, the navigation2 stack developers split move\_base into it's base component to provide more customized and extensible behavior. Navigation 2 uses the NavfnPlanner as the planning module to generating a feasible path given start and end pose. This package provides the equivalent functionality to a GlobalPlanner in ROS1 move\_base. In this demo, kobuki robot uses Dijkstra mode as its global planning algorithm by setting the NavfnPlanner parameter "use\_astar = false" (set true for A* algorithm ). 
+
+In ROS 2, Navigation 2 implements DWB as the standard local planner, and this local planner will take a path and current position to produce a command velocity\cite{c9}. Compare to ROS 1 with DWA (Dynamic Window Approach), DWB approach provide a clear extension point and modularity. The goal of using the DWB planner is to replace both base\_local\_planner and dwa\_local\_planner and the Trajectory Rollout algorithm that are used in ROS 1 navigation stack. 
+
+The Navigation 2 repository is still an on going project, new features are being added overtime.  \par\vspace{8pt} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{results}
 \subsection{Robot Mapping}
 The map shown in figure \ref{fig:map} was obtained by driving the robot in a room. The result draws reasonable boundaries. However area that near large windows shows a large amount of noise due to laser reflection. 
-\begin{figure}[ht]
+\begin{figure}[!pht]
   \includegraphics[width=\linewidth]{map.png}
   \caption{map obtained by google cartographer} 
   \label{fig:map}
 \end{figure}
 \subsection{Gazebo 9 Simulation}
 The AMCL localization and navigation works well in simulation. However, due to lack of landmarks, the localization result is highly depend on how the use select the initial position.
-    \begin{figure}[ht]
+    \begin{figure}[!pt]
     \begin{subfigure}[b]{0.5\textwidth}
        \includegraphics[width=1\linewidth]{navigation.png}
        \caption{Starting point of navigation}
@@ -252,7 +285,7 @@ The AMCL localization and navigation works well in simulation. However, due to l
     \end{subfigure}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[!pt]
   \includegraphics[width=\linewidth]{navigation_detail.png}
   \caption{Detailed navigation result} 
   \label{fig:navigation_detail}
@@ -261,8 +294,7 @@ The AMCL localization and navigation works well in simulation. However, due to l
 \section{Conclusions}\label{conclusions}
 ROS 2 is a amazing tool for Robotics application development. However, ROS 2 is still under heavy development, packages are constantly being updated, therefore it might still be too early to fully adapt ROS 2. 
 
-
-ROS2 has many new features that are very convenient, such as the new launch system, this allows user to set environment variables easily through launch file rather than manually type into the comment line. 
+The newest ROS 2 has many new features that are very convenient, such as the new launch system, this allows user to set environment variables easily through launch file rather than manually type into the comment line. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Reference}\label{reference}
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
@@ -272,6 +304,7 @@ ROS2 has many new features that are very convenient, such as the new launch syst
                                   % so it should come on the page before the last. Make
                                   % sure that you do not shorten the textheight too much.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section*{APPENDIX}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -286,5 +319,7 @@ ROS2 has many new features that are very convenient, such as the new launch syst
 \bibitem{c4} GitHub. (2019). ros2/ros1\_bridge. [online] Available at: https://github.com/ros2/ros1\_bridge [Accessed 9 Jul. 2019].
 \bibitem{c5} ROBOTIS. (2019). ROBOTIS. [online] Available at: http://en.robotis.com/ [Accessed 15 Jul. 2019].
 \bibitem{c7} "Using colcon to build packages", Index.ros.org, 2019. [Online]. Available: https://index.ros.org/doc/ros2/Tutorials/Colcon-Tutorial/. [Accessed: 16- Jul- 2019].
+\bibitem{c8} GitHub. (2019). ros-planning/navigation2. [online] Available at: https://github.com/ros-planning/navigation2/tree/master/nav2\_navfn\_planner [Accessed 17 Jul. 2019].
+\bibitem{c9} GitHub. (2019). ros-planning/navigation2. [online] Available at: https://github.com/ros-planning/navigation2/tree/master/nav2\_dwb\_controller [Accessed 17 Jul. 2019].
 \end{thebibliography}
 \end{document}

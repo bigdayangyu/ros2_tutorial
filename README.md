@@ -114,7 +114,6 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     ros2 param set node_name Parameter value
     ros2 param set catographer_node use_sim_time true
     ```
-
 * Stop daemon
     ```bash
     ros2 daemon stop
@@ -125,10 +124,10 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 ### ROS2 structure 
 User Code ---> rclcpp/py ---> rcl ---> rmw ---> rmw_
 
-1. *rclcpp/rclpy* language specific ROS clients libraries 
-2. *rcl* c Library 
-3. *rmw* ROS middleware interface: hide specific DDS implementation and streamline QoS configuration
-4. *rmw_* DDS adapters 
+1. **rclcpp/rclpy**: language specific ROS clients libraries 
+2. **rcl**: c Library 
+3. **rmw**: ROS middleware interface: hide specific DDS implementation and streamline QoS configuration
+4. **rmw_**: DDS adapters 
 
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros1_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
@@ -250,24 +249,24 @@ Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/re
 * rclcpp::SensorDataQoS
 * rclcpp::ServicesQoS
 
-
 ROS 2 Dashing API changes [link](https://index.ros.org//doc/ros2/Releases/Release-Dashing-Diademata/#rclcpp)
 
 If you have no idea what depth to use and don’t care right now (maybe just prototyping), then we recommend using 10, as that was the default before and should preserve existing behavior.
 
-
 publishers:
 ```diff
 - pub_ = create_publisher<std_msgs::msg::String>("chatter");
+# Assume a history setting of KEEP_LAST with depth 10
 + pub_ = create_publisher<std_msgs::msg::String>("chatter", 10);
 ```
 subscribers
 ```diff
 - sub_ = create_subscription<std_msgs::msg::String>("chatter", callback);
+# Assume a history setting of KEEP_LAST with depth 10
 + sub_ = create_subscription<std_msgs::msg::String>("chatter", 10, callback);
 ```
 
-Few examples:
+Few more examples:
 Publisher: 
 ```c++
  sample_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particlecloud",
@@ -278,6 +277,8 @@ Publisher:
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("amcl_pose",
       rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
 ```
+Note that `transient_local` is similar to latching in ROS 1.
+
 ### ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
 
@@ -294,11 +295,9 @@ The tool relies on meta information about the packages to determine their depend
 
 Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
 
-
-
 https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
 ### Reference Links 
-* ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
+* [ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
 * [ROS2 Resources](https://github.com/fkromer/awesome-ros2)
 * [DDS Slide](https://www.omg.org/news/meetings/workshops/RT-2007/00-T5_Hunt-revised.pdf)
 * [ROS2 Presentation](https://static1.squarespace.com/static/51df34b1e4b08840dcfd2841/t/5ce6c85ca4222fe0ccbd5309/1558628472094/2019-05-07_Current_Status_of_ROS_2.pdf) 
