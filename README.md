@@ -122,14 +122,13 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
 
 ## ROS2 New Features
 
-### ROS structure 
-User Code ---> rclcpp/py---> rcl ---> rmw ---> rmw_
+### ROS2 structure 
+User Code ---> rclcpp/py ---> rcl ---> rmw ---> rmw_
+
 1. *rclcpp/rclpy* language specific ROS clients libraries 
 2. *rcl* c Library 
 3. *rmw* ROS middleware interface: hide specific DDS implementation and streamline QoS configuration
-4. *rmw_* DDS adapters
-
-
+4. *rmw_* DDS adapters 
 
 ### ROS bridge between ROS1 and ROS2
 Reference link: [ros1_bridge](https://github.com/ros2/ros1_bridge/blob/master/README.md#build-the-bridge-from-source)
@@ -245,6 +244,40 @@ Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/re
 * System default `rmw_qos_profile_system_default`
  * This uses the system default for all of the policies.
 
+### Qos APIs
+* rclcpp::SystemDefaultsQoS
+* rclcpp::ParametersQoS
+* rclcpp::SensorDataQoS
+* rclcpp::ServicesQoS
+
+
+ROS 2 Dashing API changes [link](https://index.ros.org//doc/ros2/Releases/Release-Dashing-Diademata/#rclcpp)
+
+If you have no idea what depth to use and don’t care right now (maybe just prototyping), then we recommend using 10, as that was the default before and should preserve existing behavior.
+
+
+publishers:
+```diff
+- pub_ = create_publisher<std_msgs::msg::String>("chatter");
++ pub_ = create_publisher<std_msgs::msg::String>("chatter", 10);
+```
+subscribers
+```diff
+- sub_ = create_subscription<std_msgs::msg::String>("chatter", callback);
++ sub_ = create_subscription<std_msgs::msg::String>("chatter", 10, callback);
+```
+
+Few examples:
+Publisher: 
+```c++
+ sample_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particlecloud",
+      rclcpp::SensorDataQoS());
+```
+
+```c++
+  pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("amcl_pose",
+      rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
+```
 ### ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
 
