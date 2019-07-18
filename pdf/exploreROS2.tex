@@ -245,7 +245,7 @@ urg_node:
 \end{small}{}
 
 6. \textit{Simulation Setup} \par\vspace{5pt} 
-In this demo, simulation environment was modeled as the Bosch Sunnyvale office. The simulated office settings shown in figure\ref{fig:gazebo} has walls and desks as obstacles for the robot to perform mapping and navigation.
+In this demo, simulation environment was modeled as the Bosch Sunnyvale office. The simulated office settings shown in figure\ref{fig:gazebo} has walls and desks as obstacles for the robot to perform mapping and navigation. \par\vspace{5pt} 
 \begin{figure}[htp!]
   \includegraphics[width=\linewidth]{gazebo_simulation.png}
   \caption{Kobuki and laser scanner in Gazebo 9 Simulation } 
@@ -259,7 +259,7 @@ Navigation 2 package has several changes compare to Navigation in ROS 1. In ROS 
 
 In ROS 2, Navigation 2 implements DWB as the standard local planner, and this local planner will take a path and current position to produce a command velocity\cite{c9}. Compare to ROS 1 with DWA (Dynamic Window Approach), DWB approach provide a clear extension point and modularity. The goal of using the DWB planner is to replace both base\_local\_planner and dwa\_local\_planner and the Trajectory Rollout algorithm that are used in ROS 1 navigation stack. 
 
-The Navigation 2 repository is still an on going project, new features are being added overtime.  \par\vspace{8pt} 
+Navigation 2 repository is still an on going project, new features are being added overtime. \par\vspace{8pt} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{results}
 \subsection{Robot Mapping}
@@ -271,18 +271,19 @@ The map shown in figure \ref{fig:map} was obtained by driving the robot in a roo
 \end{figure}
 \subsection{Gazebo 9 Simulation}
 The AMCL localization and navigation works well in simulation. However, due to lack of landmarks, the localization result is highly depend on how the use select the initial position.
-    \begin{figure}[!pt]
+\begin{figure}[!pt]
     \begin{subfigure}[b]{0.5\textwidth}
        \includegraphics[width=1\linewidth]{navigation.png}
        \caption{Starting point of navigation}
        \label{fig:Ng1} 
     \end{subfigure}
-    
     \begin{subfigure}[b]{0.5\textwidth}
        \includegraphics[width=1\linewidth]{navigation2.png}
        \caption{Midpoint of the navigation}
        \label{fig:Ng2}
     \end{subfigure}
+  \caption{Navigation Process in simulation} 
+  \label{fig:navigation_result}
 \end{figure}
 
 \begin{figure}[!pt]
@@ -292,9 +293,10 @@ The AMCL localization and navigation works well in simulation. However, due to l
 \end{figure}{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}\label{conclusions}
-ROS 2 is a amazing tool for Robotics application development. However, ROS 2 is still under heavy development, packages are constantly being updated, therefore it might still be too early to fully adapt ROS 2. 
+The newest ROS 2 has many new features that are very convenient for different applications, such as QoS policy, lifecycle management and more flexible launch system. Also the new communication protocols DDS allows ROS 2 to coordinate messages without a central master which gives ROS 2 fault tolerance for applications. 
 
-The newest ROS 2 has many new features that are very convenient, such as the new launch system, this allows user to set environment variables easily through launch file rather than manually type into the comment line. 
+ROS 2 is an amazing tool for Robotics development, however, it is still under heavy development, so packages are constantly being updated. After each ROS 2 update, ROS community members are actively adapting their packages into the system and providing feedback on the evolving system. Therefore, ROS 2 would be a very useful tool in the robotics field.  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Reference}\label{reference}
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
