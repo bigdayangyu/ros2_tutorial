@@ -266,8 +266,15 @@ Navigation 2 repository is still an on going project, new features are being add
 The map shown in figure \ref{fig:map} was obtained by driving the robot in a room. The result draws reasonable boundaries. However area that near large windows shows a large amount of noise due to laser reflection. 
 \begin{figure}[!pht]
   \includegraphics[width=\linewidth]{map.png}
-  \caption{map obtained by google cartographer} 
+  \caption{a single room map obtained by google cartographer} 
   \label{fig:map}
+\end{figure}
+
+This figure \ref{fig:officeMap} shows the partial map of the office 
+\begin{figure}[!pht]
+  \includegraphics[width=\linewidth]{officeMap.png}
+  \caption{office map obtained by google cartographer} 
+  \label{fig:officeMap}
 \end{figure}
 \subsection{Gazebo 9 Simulation}
 The AMCL localization and navigation works well in simulation. However, due to lack of landmarks, the localization result is highly depend on how the use select the initial position.
