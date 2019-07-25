@@ -301,4 +301,5 @@ https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-D
 * [ROS2 Resources](https://github.com/fkromer/awesome-ros2)
 * [DDS Slide](https://www.omg.org/news/meetings/workshops/RT-2007/00-T5_Hunt-revised.pdf)
 * [ROS2 Presentation](https://static1.squarespace.com/static/51df34b1e4b08840dcfd2841/t/5ce6c85ca4222fe0ccbd5309/1558628472094/2019-05-07_Current_Status_of_ROS_2.pdf) 
-
+* [ROS concepts](https://github.com/ros2/ros2_documentation/blob/master/source/Concepts/Overview-of-ROS-2-concepts.rst)
+* [Quality of Service Doc](https://github.com/ros2/ros2_documentation/blob/master/source/Concepts/About-Quality-of-Service-Settings.rst)
