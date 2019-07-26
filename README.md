@@ -295,6 +295,37 @@ The tool relies on meta information about the packages to determine their depend
 
 Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
 
+### ROS 2 Networking
+#### What's new in ROS2 networking
+* ROS 2 UDP uses multicast to allow different node to discover each other and establish communication.
+* ROS 2 DDS implementation allows users to specify a domain ID and create a logical barrier to segregate networks.
+* If two or more machines are on the same network, and allows multicast, messages can be passed to different machines. 
+* No longer needed to set ROS_HOSTNAME, ROS_MASTER, ROS_MASTER_URI
+
+#### How to setup multiple hosts for ROS 2
+* Configure your network to allow multicast 
+* Make sure to connect your machines under the same subnet(same network mask)
+* Ping two machines between each other 
+* Export the same ROS_DOMAIN_ID into different host
+
+To check if multicast is enabled to both terminal, first set the ROS_DOMAIN_ID for both machines. ROS_DOMAIN_ID should be same across different hosts, otherwise, nodes cannot automatically discover each other
+
+Open host 1 terminal
+```bash
+$ export ROS_DOMAIN_ID=<Your Domain ID>    # Domain ID between 0-232
+$ source /opt/ros/dashing/setup.bash
+
+$ ros2 multicast receive
+ ```
+
+Open host 2 terminal 
+```bash
+$ export ROS_DOMAIN_ID=<Your Domain ID>    # Domain ID between 0-232
+$ source /opt/ros/dashing/setup.bash
+
+$ ros2 multicast send
+ ```
+If terminal receives message from the second host machine, that means nodes on both machines can communicate with each other,  
 https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
 ### Reference Links 
 * [ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
