@@ -11,13 +11,17 @@
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
-5. Changes in Make system 
+  
+5. [Changes in Build System](#ament-build-tool)
    * ament vs catkin
    * CMakelist and packge.xml changes in ROS2 
 6. ROS2 Launch
    * Finding Path 
    * Node Names: launching multiple node with same node name problem
    * Launch argument 
+7. [ROS 2 Networking](#ros-2-networking)
+   * [Compare to ROS 1](#what's-new-in-ros2-networking)
+   * How to setup networking on different hosts(how-to-setup-multiple-hosts-for-ros2)
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
@@ -243,7 +247,7 @@ Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/re
 * System default `rmw_qos_profile_system_default`
  * This uses the system default for all of the policies.
 
-### Qos APIs
+### Qos predefined profiles 
 * rclcpp::SystemDefaultsQoS
 * rclcpp::ParametersQoS
 * rclcpp::SensorDataQoS
@@ -266,8 +270,7 @@ subscribers
 + sub_ = create_subscription<std_msgs::msg::String>("chatter", 10, callback);
 ```
 
-Few more examples:
-Publisher: 
+Few more examples Publisher: 
 ```c++
  sample_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particlecloud",
       rclcpp::SensorDataQoS());
@@ -279,10 +282,10 @@ Publisher:
 ```
 Note that `transient_local` is similar to latching in ROS 1.
 
-### ROS2 Launch system
+## ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
 
-### Ament Build tool
+## Ament Build tool
 #### Overview and Background
 Reference Link [Ament Tutorial](https://index.ros.org/doc/ros2/Tutorials/Ament-Tutorial/)
 
@@ -295,26 +298,25 @@ The tool relies on meta information about the packages to determine their depend
 
 Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
 
-### ROS 2 Networking
-#### What's new in ROS2 networking
+## ROS 2 Networking
+### What's new in ROS2 networking
 * ROS 2 UDP uses multicast to allow different node to discover each other and establish communication.
 * ROS 2 DDS implementation allows users to specify a domain ID and create a logical barrier to segregate networks.
 * If two or more machines are on the same network, and allows multicast, messages can be passed to different machines. 
 * No longer needed to set ROS_HOSTNAME, ROS_MASTER, ROS_MASTER_URI
 
-#### How to setup multiple hosts for ROS 2
+### How to setup multiple hosts for ROS2
 * Configure your network to allow multicast 
 * Make sure to connect your machines under the same subnet(same network mask)
 * Ping two machines between each other 
 * Export the same ROS_DOMAIN_ID into different host
 
-To check if multicast is enabled to both terminal, first set the ROS_DOMAIN_ID for both machines. ROS_DOMAIN_ID should be same across different hosts, otherwise, nodes cannot automatically discover each other
+To check if multicast is enabled on both machines, first set the ROS_DOMAIN_ID for both machines. ROS_DOMAIN_ID should be same across different hosts, otherwise, nodes cannot automatically discover each other
 
 Open host 1 terminal
 ```bash
 $ export ROS_DOMAIN_ID=<Your Domain ID>    # Domain ID between 0-232
 $ source /opt/ros/dashing/setup.bash
-
 $ ros2 multicast receive
  ```
 
@@ -322,11 +324,12 @@ Open host 2 terminal
 ```bash
 $ export ROS_DOMAIN_ID=<Your Domain ID>    # Domain ID between 0-232
 $ source /opt/ros/dashing/setup.bash
-
 $ ros2 multicast send
  ```
-If terminal receives message from the second host machine, that means nodes on both machines can communicate with each other,  
-https://github.com/ros2/ros2_documentation/blob/master/source/Releases/Release-Dashing-Diademata.rst
+If terminal receives message from the second host machine, that means nodes on both machines can communicate with each other. 
+
+Also, if you don't want different machines to interfere each other, just simply set ROS_DOMAIN_ID differently. 
+
 ### Reference Links 
 * [ROS2 Basics](http://roboscience.org/book/html/ROS/ROS.html)
 * [ROS2 Resources](https://github.com/fkromer/awesome-ros2)
