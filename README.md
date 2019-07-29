@@ -21,7 +21,7 @@ This tutorial provides references of some commonly used ROS 2 features. Please r
    * Launch argument 
 7. [ROS 2 Networking](#ros-2-networking)
    * [Compare to ROS 1](#what's-new-in-ros2-networking)
-   * [How to setup networking on different hosts](how-to-setup-multiple-hosts-for-ros2)
+   * [How to setup networking on different hosts](#how-to-setup-multiple-hosts-for-ros2)
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
@@ -100,23 +100,25 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     ```bash 
     ros2 launch <package_name> <launch_file>
     ```
-
 * ros2 pkg 
     ```bash
     ros2 pkg list
     ros2 pkg prefix <package_name>
+    ros2 pkg -h          # ros2 pkg help
     ```
 
 * ros2 topic
     ```bash
     ros2 topic echo <topic_name>
     ros2 topic list
+    ros2 topic -h       # ros2 topic help 
     ```
 * ros2 parameter 
     ```bash
     ros2 param list
     ros2 param set node_name Parameter value
-    ros2 param set catographer_node use_sim_time true
+    ros2 param set catographer_node use_sim_time true # set the use_sim_time param to be true
+    ros2 param -h       # ros2 param help
     ```
 * Stop/Start daemon
     ```bash
@@ -282,12 +284,95 @@ Few more examples Publisher:
       rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
 ```
 Note that `transient_local` is similar to latching in ROS 1.
-#### ROS2 Lifecycle 
+### ROS2 Lifecycle 
 * ROS 2 lifecycle design concepts [link](http://design.ros2.org/articles/node_lifecycle.html)
 * ROS 2 lifecycle demo [link](https://github.com/ros2/demos/blob/master/lifecycle/README.rst)
 
-
 ## ROS2 Launch system
+ROS Launch system is a tool for easily launching multiple ROS nodes, setting parameters for those nodes, describing the configuration of their system and then execute it as described. launch system will also monitor the state of the processes launched. 
+
+ROS 2 launch system has been significantly changed compare to ROS 1 launch system. The new features are listed as follows: 
+
+* No longer uses XML configuration files, launch files are Python scripts
+* Support for Managed Nodes (Lifecycle)
+* Node composition from shared libraries
+
+Launch files should be saved as `.launch.py` for example: `my_file.launch.py`.
+
+### launch functions
+#### basic launch file
+this example launches the kobuki_node which is an excitable node from turtlebot2_drivers package(provided by `turtlebot2_demo` repository)
+```python 
+import launch 
+import launch_ros
+def generate_launch_description():
+    return launch.LaunchDescription([
+        launch_ros.actions.Node(
+            package="turtlebot2_drivers",   
+            node_executable="kobuki_node",
+            node_name="kobuki_node", 
+            output="screen")
+])
+```
+#### launch arguments
+This example shows ROS2 launches the `static_state_publisher` node from `tf2_ros` package with arguments:
+```python
+        launch_ros.actions.Node(
+            package="tf2_ros",
+            node_executable="static_transform_publisher",
+            arguments=['0','0', '0.161', '0','0','0','1', 'base_link', 'laser']
+            )
+```
+#### launch parameters 
+ROS2 parameters are stored in a parameter yaml files, the following is a parameter file [example](https://index.ros.org/doc/ros2/Tutorials/Node-arguments/) from ros 2 tutorial:
+```XML
+parameter_blackboard:
+    ros__parameters:
+        some_int: 42
+        a_string: "Hello world"
+        some_lists:
+            some_integers: [1, 2, 3, 4]
+            some_doubles : [3.14, 2.718]
+```
+To include the parameter setting, you can include the launch parameter in a launch argument. For example, to launch the urg_node with urg_node parameters: 
+
+```python
+         launch_ros.actions.Node(
+            package="urg_node",
+            node_executable="urg_node",
+            output="screen",
+            arguments=["__params:=/PATH/urg_node.yaml"]
+            )
+```
+#### Nested launch files 
+ROS 2 also allows users to launch another launch file inside one launch file
+Import libraries: 
+```python
+import launch.actions 
+import launch.launch_description_sources 
+```
+The nested launch file can be called as the following example: 
+```python 
+        launch.actions.IncludeLaunchDescription(
+            launch.launch_description_sources.PythonLaunchDescriptionSource([PATH, '/my_file.launch.py']),
+        )
+```       
+
+#### launch path: 
+Import libraries: 
+```python
+import os
+from ament_index_python.packages import get_package_share_directory
+```
+Finding the package directory: 
+```python
+# package directory: 
+my_pkg_path = ament_index_python.packages.get_package_share_directory(‘PACAKGE_NAME’)
+
+# Combining two path into one: 
+my_config_file_path = os.path.join(my_pkg_path, 'configuration_files')
+```
+
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
 
 ## Ament Build tool
