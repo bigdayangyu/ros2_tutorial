@@ -15,10 +15,11 @@ This tutorial provides references of some commonly used ROS 2 features. Please r
 5. [Changes in Build System](#ament-build-tool)
    * ament vs catkin
    * CMakelist and packge.xml changes in ROS2 
-6. [ROS2 Launch](#ros2-launch)
-   * Finding Path 
-   * Node Names: launching multiple node with same node name problem
-   * Launch argument 
+6. [ROS2 Launch](#ros2-launch-system)
+   * basic launch file
+   * launch arguments
+   * launch parameters 
+   * nested launch files 
 7. [ROS 2 Networking](#ros-2-networking)
    * [Compare to ROS 1](#what's-new-in-ros2-networking)
    * [How to setup networking on different hosts](#how-to-setup-multiple-hosts-for-ros2)
@@ -287,6 +288,13 @@ Note that `transient_local` is similar to latching in ROS 1.
 ### ROS2 Lifecycle 
 * ROS 2 lifecycle design concepts [link](http://design.ros2.org/articles/node_lifecycle.html)
 * ROS 2 lifecycle demo [link](https://github.com/ros2/demos/blob/master/lifecycle/README.rst)
+
+ROS 2 provides a life cycle management system for nodes, which gives user greater control over the sates of ROS system. A managed node allows the launch system to ensure that all components needed for the application have been instantiated correctly before it allows any component to begin executing its behavior. 
+
+One of the example use case would be a system with sensors that have long boosting time. The device driver can be instantiated to configuring state, and start when the sensor is ready to send data. This gives the developer more flexibility of how their packages can be launched, and not worry about stopping the entire system just to change the state of one node. 
+
+Note that the life cycle node does not inherit from the regular `rclcpp::node::Node` but from `rclcpp_lifecycle::LifecycleNode`.
+
 
 ## ROS2 Launch system
 ROS Launch system is a tool for easily launching multiple ROS nodes, setting parameters for those nodes, describing the configuration of their system and then execute it as described. launch system will also monitor the state of the processes launched. 
