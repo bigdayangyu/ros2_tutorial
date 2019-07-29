@@ -1,5 +1,5 @@
 # ros2_tutorial
-
+This tutorial provides references of some commonly used ROS 2 features. Please refer to the [official tutorials](https://index.ros.org/doc/ros2/Tutorials/) for a full introduction of the awesome ROS 2  
 ## Table of Contents
 1. [Install ROS2 dashing ](#install-ros2-dashing)
 2. [Workspace and Packages](#workspace-and-packages)
@@ -10,18 +10,18 @@
 4. [New Features in ROS2](#ros2-new-features)
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
-   * [ROS 2 Quality of Service policies](#ros-2-quality-of-service-policies)
-  
+   * [ROS2 Quality of Service policies](#ros-2-quality-of-service-policies)
+   * [ROS2 Lifecycle](#ros2-lifecycle)
 5. [Changes in Build System](#ament-build-tool)
    * ament vs catkin
    * CMakelist and packge.xml changes in ROS2 
-6. ROS2 Launch
+6. [ROS2 Launch](#ros2-launch)
    * Finding Path 
    * Node Names: launching multiple node with same node name problem
    * Launch argument 
 7. [ROS 2 Networking](#ros-2-networking)
    * [Compare to ROS 1](#what's-new-in-ros2-networking)
-   * How to setup networking on different hosts(how-to-setup-multiple-hosts-for-ros2)
+   * [How to setup networking on different hosts](how-to-setup-multiple-hosts-for-ros2)
 
 ## Install ROS2 dashing 
 [Dashing Linux Install](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
@@ -118,9 +118,10 @@ Reference Page: [colcon documentation](https://buildmedia.readthedocs.org/media/
     ros2 param set node_name Parameter value
     ros2 param set catographer_node use_sim_time true
     ```
-* Stop daemon
+* Stop/Start daemon
     ```bash
     ros2 daemon stop
+    ros2 daemon start
     ```
 
 ## ROS2 New Features
@@ -247,7 +248,7 @@ Reference Link [RMW QoS Profile Header File](https://github.com/ros2/rmw/blob/re
 * System default `rmw_qos_profile_system_default`
  * This uses the system default for all of the policies.
 
-### Qos predefined profiles 
+#### Qos predefined profiles 
 * rclcpp::SystemDefaultsQoS
 * rclcpp::ParametersQoS
 * rclcpp::SensorDataQoS
@@ -281,6 +282,10 @@ Few more examples Publisher:
       rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
 ```
 Note that `transient_local` is similar to latching in ROS 1.
+#### ROS2 Lifecycle 
+* ROS 2 lifecycle design concepts [link](http://design.ros2.org/articles/node_lifecycle.html)
+* ROS 2 lifecycle demo [link](https://github.com/ros2/demos/blob/master/lifecycle/README.rst)
+
 
 ## ROS2 Launch system
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
