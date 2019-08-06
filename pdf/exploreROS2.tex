@@ -49,11 +49,11 @@ Robot Operating System (ROS) is a robotics middleware that was created by Willow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{ROS2 Design Background}
 ROS was originally designed for PR2 use case. PR2 robot works as a standalone robot with excellent network connectivity, also PR2 applications are mostly research based, therefore the early design concept of ROS does not need to consider real-time problems.
-
+\par\vspace{3pt} 
 Nowadays ROS has gained tremendous popularity in robotics community, and the use cases has grown beyond the scope of academia and scientific research. Many robotics applications such as  industrial robots, outdoor robots(for example driver-less cars), unmanned aerial vehicles(UVA) have become more and more complicated, as a result, those applications have higher demand on the robust real-time performance of the robot operating system. Although ROS1 is still a very popular development tool in the field of robotics, the limitations of the original design have become a driving force of the new ROS2 design\cite{c3}. 
-
+\par\vspace{3pt} 
 With the growing demand of cross operating system platform and real-time functionality from the ROS community, ROS2 development was first announced at ROSCon 2014, and the first alpha version was launched in August 2015. On December 8, 2017, the highly anticipated ROS 2.0 finally released its first official version, Ardent Apalone. As of 2019, the newest version ROS 2 Dashing Diademata was released on May 30.
-
+\par\vspace{3pt} 
 Compare to ROS1, ROS2 has the following support for robotics applications\cite{c3}: 
 \begin{itemize}
   \item \textbf{Cross-system platform support}: ROS2 support for Linux, Windows and macOS as well as the real-time operating system(RTOS).
@@ -72,24 +72,21 @@ Compare to ROS1, ROS2 has the following support for robotics applications\cite{c
 \end{figure}
 
 ROS1 uses TCP (Transmission Control Protocol) as its communication protocol. TCP is a connection oriented network, this means that TCP tracks all data sent, requiring acknowledgment for each octet (generally), therefore,  ROS1 has a centralized network configuration which requires a running ROS master to take care of naming and registration services. With the help of the master, ROS nodes could find each other on the network and communicate in a peer-to-peer fashion. In ROS1 setting, all nodes will depend on the central ROS master. When the network becomes lossy and unstable(especially if nodes are distributed on several computers), the communication will not be reliable for real-time applications or multi-robot systems.
-
+\par\vspace{3pt} 
 ROS2 uses Data Distribution Service (DDS) as the communication middleware. UDP is a Data-Centric-Publish-Subscribe(DCPS) model, and this model will create global data space for individual applications to exchange information. DDS will identify a data object by its topic name and then subscribe to this topic, therefore, DDS does not have a central distributor for all information. The DDS publish-subscribe model avoids complex network programming for distributed applications.  ROS2 provides an abstraction layer of DDS, so users do not need to pay attention to the underlying DDS structure. The ROS2 Middleware Interface(RMW) allows users to choose different Quality of Service(QoS). The real-time publish-subscribe (RTPS) protocol allows ROS2 nodes to automatically find each other on the network, thus there is no need for a ROS2 master. This is an important point in terms of fault tolerance.
-
-
-\subsection{ROS 2 QoS policy}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-When ROS 2 Bouncy was released, a TurtleBot 2 demo was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL (Adaptive Monte Carlo Localization)package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS 2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps. 
-
+When ROS 2 Bouncy was released, a TurtleBot 2 demo \cite{c10} was provided to demonstrate the some popular mapping and localization packages that runs in ROS 2. TurtleBot 2 demo uses Google Cartographer to get maps of the environment, and use AMCL (Adaptive Monte Carlo Localization)package to localize. TurtleBot 2 demo also provided TurtleBot 2 driver and the Orbbec Astra depth camera sensor driver. At the time this demo was created, ROS 2 navigation stack was still under development, therefore, TurtleBot 2 demo uses joystick to manually operate the robot to create maps. 
+\par\vspace{3pt} 
 After ROS 2 Dashing was released, The manufacturer of TurtleBot 3 ROBOTIS\cite{c5} provided a TurtleBot 3 demo that runs ROS 2 dashing. TurtleBot 3 demo includes robot mapping and navigation, so this demo for Kobuki robot is based on the work of TurtleBot 3. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Method}
 The objective of this demo is to build a Kobuki SLAM and navigation demo on top of the existing TurtleBot 2 demo, and update packages so that the Kobuki robot can achieve SLAM and autonomous navigation using the latest ROS 2 Dashing Diademata release. 
  
 \begin{figure}[ht]
-  \includegraphics[width=\linewidth]{kobuki_image.jpg}
-  \caption{Image of Kobuki Robot(TODO)} 
+  \centerline{\includegraphics[width=0.7\linewidth]{kobuki_robot.JPG}}
+  \caption{Kobuki Robot} 
   \label{fig:Kobuki_image}
 \end{figure}
 %%%%%%%%%%%%%
@@ -158,10 +155,12 @@ The objective of this demo is to build a Kobuki SLAM and navigation demo on top 
  ROS2 uses a build system called Ament Build tool. Ament is an evolution of catkin that automatically build a set of independent packages base on their dependency topological order. Ament will also install and configure the environment for packages, so the user does not need to follow a specific dependency order to build packages. The package.xml will provide meta information about the packages and their dependencies, and the build configuration are stored in the CMakeList.txt  \par \vspace{5pt}
  
 2. \textit{Build packages using colcon build}\par\vspace{5pt}
-ROS1 has multiple different building tools such as catkin\_make, catkin\_make\_isolated and catkin\_tools. ROS 2 provides a universal build tool called colcon. This colcon tool makes the building testing and using multiple packages easy\cite{c7}. \par\vspace{5pt}
+ROS1 has multiple different building tools such as catkin\_make, catkin\_make\_isolated and catkin\_tools. ROS 2 provides a universal build tool called colcon. This colcon tool makes the building testing and using multiple packages easily\cite{c7}. \par\vspace{5pt}
 
-3. \textit{Manual mapping using Cartographer}\par\vspace{5pt} TODO Kobuki\_driver SetUp \par\vspace{5pt}
-% launch system 
+3. \textit{Manual mapping using Cartographer}\par\vspace{5pt}
+
+The turtlebot2\_demo repository provided a robot hardware driver called \textit{kobuki\_driver}, this node is responsible for robot hardware control, as well as sensor data reading from IMU and wheel encoder. This driver also provide robot odemotry that is essential to robot mapping and localization. \par\vspace{5pt}
+
 This demo uses teleop-keyboard to manually operate the Kobuki robot. The cartographer node utilizes the laser scan data obtained from the hokuyo laser scanner and the optometry information published though the kobuki\_node robot driver and create a 2D map. 
 This demo uses teleo-keyboard to operate the Kobuki robot, and obtain a map using google cartographer. The rqt\_graph of the structure is show in figure \ref{fig:rqt}\par\vspace{5pt}
 \begin{figure}[ht]
@@ -171,7 +170,7 @@ This demo uses teleo-keyboard to operate the Kobuki robot, and obtain a map usin
 \end{figure}
 4. \textit{Data visualization using ros1\_bridge}\par\vspace{5pt} 
 ROS 2 is still under heavy development, so many packages built for ROS 1 have not yet been converted into ROS 2 compatible version. ROS 2 designers provided a solution to bridge the communication between ROS 1 and ROS 2 by ros1\_bridge.  
-
+\par\vspace{5pt} 
 This demo uses ros1\_bridge to pass data into ROS 1 to visualize the map obtained by cartographer. ros1\_bridge provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2. This bridge will establish connection when matching publisher-subscriber pairs are active to a topic on either side of the bridge\cite{c4}. The current version supports most of the common message types in ROS 1 and ROS 2, user can also create their own customized message pairs through a package mapping rule file that matches all messages with the same names and fields within a pair of packages.\par\vspace{5pt} 
 
 5. \textit{Launch File Setup} \par\vspace{5pt}
@@ -254,30 +253,48 @@ In this demo, simulation environment was modeled as the Bosch Sunnyvale office. 
 
 7. \textit{Navigation in simulation} \par\vspace{5pt} 
 The navigation 2 package is designed for ROS 2, just like the original navigation stack in ROS 1, navigation 2 enables a robot to autonomously reach a goal state. Kobuki navigation uses the navigation2 packages to navigate through the map obtained by google cartographer. Given a robot initial pose, and a goal pose shown in rviz map, navigation 2 will generate a path plan and send command to the drive the robot. The robot will reach the goal while avoiding obstacles along the path. 
-
+\par\vspace{5pt} 
 Navigation 2 package has several changes compare to Navigation in ROS 1. In ROS 1, the move\_base package links a global and local planner together to accomplish its global navigation task\cite{c8}. However in ROS 2, the navigation2 stack developers split move\_base into it's base component to provide more customized and extensible behavior. Navigation 2 uses the NavfnPlanner as the planning module to generating a feasible path given start and end pose. This package provides the equivalent functionality to a GlobalPlanner in ROS1 move\_base. In this demo, kobuki robot uses Dijkstra mode as its global planning algorithm by setting the NavfnPlanner parameter "use\_astar = false" (set true for A* algorithm ). 
-
+\par\vspace{5pt} 
 In ROS 2, Navigation 2 implements DWB as the standard local planner, and this local planner will take a path and current position to produce a command velocity\cite{c9}. Compare to ROS 1 with DWA (Dynamic Window Approach), DWB approach provide a clear extension point and modularity. The goal of using the DWB planner is to replace both base\_local\_planner and dwa\_local\_planner and the Trajectory Rollout algorithm that are used in ROS 1 navigation stack. 
-
+\par\vspace{5pt} 
 Navigation 2 repository is still an on going project, new features are being added overtime. \par\vspace{8pt} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{results}
 \subsection{Robot Mapping}
-The map shown in figure \ref{fig:map} was obtained by driving the robot in a room. The result draws reasonable boundaries. However area that near large windows shows a large amount of noise due to laser reflection. 
-\begin{figure}[!pht]
-  \includegraphics[width=\linewidth]{map.png}
-  \caption{a single room map obtained by google cartographer} 
-  \label{fig:map}
-\end{figure}
+% The map shown in figure \ref{fig:map} was obtained by driving the robot in a room. The result draws reasonable boundaries. However area that near large windows shows a large amount of noise due to laser reflection. 
+% \begin{figure}[!pht]
+%   \includegraphics[width=\linewidth]{map.png}
+%   \caption{a single room map obtained by google cartographer} 
+%   \label{fig:map}
+% \end{figure}
 
-This figure \ref{fig:officeMap} shows the partial map of the office 
+This figure \ref{fig:officeMap} shows the partial map of the office. The laser scanner was mounted on the top stack of the kobuki robot, as a result, when the robot accelerate and move forward, the laser scanner will be tilted due to acceleration. In the \textit{kobuki\_driver.cpp} file, \textit{kobuki::Kobuki::updateOdometry} method will update the robot odometry base on the fused data from encoder and gyroscope reading. A sudden acceleration will affect gyro accuracy and then lead to inaccurate odometry. As the result, mapping result shows that the hall way is not perpendicular to the adjacent wall as the robot odometry drifted.  
+
 \begin{figure}[!pht]
-  \includegraphics[width=\linewidth]{officeMap.png}
+  \centerline{\includegraphics[width=0.8\linewidth]{officeMap.png}}
   \caption{office map obtained by google cartographer} 
   \label{fig:officeMap}
 \end{figure}
-\subsection{Gazebo 9 Simulation}
-The AMCL localization and navigation works well in simulation. However, due to lack of landmarks, the localization result is highly depend on how the use select the initial position.
+
+\vspace{5pt}
+In order to improve the smoothness of robot acceleration, laser scanner was moved to the lower stack as shown in figure \ref{fig:robot1}, and a heavy battery pack was placed in the front of the robot. The map shown the figure \ref{fig:newofficeMap} has better result in the regions with long hall way.  
+
+\begin{figure}[!pht]
+  \centerline{\includegraphics[width=0.6\linewidth]{kobuki_modified.JPG}}
+  \caption{Modified center of mass} 
+  \label{fig:robot1}
+\end{figure}
+
+\begin{figure}[!pht]
+  \centerline{\includegraphics[width=0.8\linewidth]{betterMap.png}}
+  \caption{Map after updated the center of mass} 
+  \label{fig:newofficeMap}
+\end{figure}
+
+\subsection{Navigation 2 in Simulation}
+The ROS 2 navigation stack is an ongoing project, therefore many features are still not available. This simulation demo tested the AMCL localization provided by the Navigation 2 package. AMCL particles was initialized as an uniform distribution when the first guess of  initial position is entered by RVIZ, then AMCL tries to match the laser scans to the map in order to correct robot pose with respect to the map. After driving robot around, AMCL particles start to converge and localizes the robot. The localization result is shown in figure \ref{fig:navigation_result} and figure \ref{fig:navigation_detail}
+
 \begin{figure}[!pt]
     \begin{subfigure}[b]{0.5\textwidth}
        \includegraphics[width=1\linewidth]{navigation.png}
@@ -301,7 +318,7 @@ The AMCL localization and navigation works well in simulation. However, due to l
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}\label{conclusions}
 The newest ROS 2 has many new features that are very convenient for different applications, such as QoS policy, lifecycle management and more flexible launch system. Also the new communication protocols DDS allows ROS 2 to coordinate messages without a central master which gives ROS 2 fault tolerance for applications. 
-
+\par\vspace{5pt} 
 ROS 2 is an amazing tool for Robotics development, however, it is still under heavy development, so packages are constantly being updated. After each ROS 2 update, ROS community members are actively adapting their packages into the system and providing feedback on the evolving system. Therefore, ROS 2 would be a very useful tool in the robotics field.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -315,7 +332,7 @@ ROS 2 is an amazing tool for Robotics development, however, it is still under he
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{APPENDIX}
-
+Codes of this demo are available on GitHub: https://github.com/bigdayangyu/kobuki\_navigation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{ACKNOWLEDGMENT}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -324,6 +341,7 @@ ROS 2 is an amazing tool for Robotics development, however, it is still under he
 \bibitem{c1} Y. Maruyama, S. Kato, and T. Azumi, “Exploring the performance of ROS2,” Proceedings of the 13th International Conference on Embedded Software - EMSOFT 16, 2016. 
 \bibitem{c2} Open Source Robotics Foundation(OSRF) http://www.osrfoundation.org/.
 \bibitem{c3} Gerkey, B. (2019). Why ROS 2?. [online] Design.ros2.org. Available at: https://design.ros2.org/articles/why\_ros2.html [Accessed 9 Jul. 2019].
+\bibitem{c10} ros2, “ros2/turtlebot2\_demo,” GitHub, 26-Mar-2019. [Online]. Available: https://github.com/ros2/turtlebot2\_demo. [Accessed: 06-Aug-2019].
 \bibitem{c6}Ros.org. (2019). Morgan Quigley (OSRF): ROS 2 on "Small" Embedded Systems - ROS robotics news. [online] Available at: http://www.ros.org/news/2016/03/morgan-quigley-osrf-ros-2-on-small-embedded-systems.html [Accessed 15 Jul. 2019].
 \bibitem{c4} GitHub. (2019). ros2/ros1\_bridge. [online] Available at: https://github.com/ros2/ros1\_bridge [Accessed 9 Jul. 2019].
 \bibitem{c5} ROBOTIS. (2019). ROBOTIS. [online] Available at: http://en.robotis.com/ [Accessed 15 Jul. 2019].
@@ -332,3 +350,5 @@ ROS 2 is an amazing tool for Robotics development, however, it is still under he
 \bibitem{c9} GitHub. (2019). ros-planning/navigation2. [online] Available at: https://github.com/ros-planning/navigation2/tree/master/nav2\_dwb\_controller [Accessed 17 Jul. 2019].
 \end{thebibliography}
 \end{document}
+
+

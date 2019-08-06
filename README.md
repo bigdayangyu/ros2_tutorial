@@ -7,14 +7,14 @@ This tutorial provides references of some commonly used ROS 2 features. Please r
    * [Create ROS2 Package](#create-a-new-ros2-package)
    * [Build ROS2 Packages using Colcon Build](#build-the-workspace)
 3. [Run ROS2 command](#ros2-command)
-4. [New Features in ROS2](#ros2-new-features)
+4. [Changes in Build System](#ament-build-tool)
+   * ament vs catkin
+   * CMakelist and packge.xml changes in ROS2 
+5. [New Features in ROS2](#ros2-new-features)
    * [ROS1-ROS2 bridge](#ros-bridge-between-ros1-and-ros2)
    * [TF2](#tf2)
    * [ROS2 Quality of Service policies](#ros-2-quality-of-service-policies)
    * [ROS2 Lifecycle](#ros2-lifecycle)
-5. [Changes in Build System](#ament-build-tool)
-   * ament vs catkin
-   * CMakelist and packge.xml changes in ROS2 
 6. [ROS2 Launch](#ros2-launch-system)
    * basic launch file
    * launch arguments
@@ -182,6 +182,18 @@ Reference Link: [tf2_ros](http://wiki.ros.org/tf2_ros)
 
     After the TransformListener object is created, it starts receiving tf2 transform over the wire, and buffers them for up to 10 seconds.The TransformListener object should be scoped to persist otherwise it's cache will be unable to fill and almost every query will fail. The common method is to make the TransformaListener object a member variable of a class.  
 
+## Ament Build tool
+#### Overview and Background
+Reference Link [Ament Tutorial](https://index.ros.org/doc/ros2/Tutorials/Ament-Tutorial/)
+
+`ament` is a meta build system to improve building applications which are split into separate packages. It consists of two major parts:
+
+* a build system (e.g. CMake, Python setup tools) to configure, build, and install a single package
+* a tool to invoke the build of individual packages in their topological order
+
+The tool relies on meta information about the packages to determine their dependencies and their build type. This meta information is defined in a manifest file called `package.xml` 
+
+Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
 
 ### ROS 2 Quality of Service policies
 
@@ -382,19 +394,28 @@ my_config_file_path = os.path.join(my_pkg_path, 'configuration_files')
 ```
 
 Reference Link: [Turtlebot3 demo launch file](https://github.com/ROBOTIS-GIT/turtlebot3/blob/ros2/turtlebot3_bringup/launch/turtlebot3_state_publisher.launch.py)
-
-## Ament Build tool
-#### Overview and Background
-Reference Link [Ament Tutorial](https://index.ros.org/doc/ros2/Tutorials/Ament-Tutorial/)
-
-`ament` is a meta build system to improve building applications which are split into separate packages. It consists of two major parts:
-
-* a build system (e.g. CMake, Python setup tools) to configure, build, and install a single package
-* a tool to invoke the build of individual packages in their topological order
-
-The tool relies on meta information about the packages to determine their dependencies and their build type. This meta information is defined in a manifest file called `package.xml` 
-
-Each package is built separately with its own build system. In order to make the output of one package available to other packages each package can extend the environment in a way that downstream packages can find and use its artifacts and resources. If the resulting artifacts are installed into /usr, for example, it might not be necessary to alter the environment at all since these folders are commonly being searched by various tools.
+## ROS2 Node argument 
+### Name Remapping
+Remapping node names: 
+Names within a node (e.g. topics/services) can be remapped using the syntax 
+```bash
+<old name>:=<new name>
+```
+name node itself can be remapped using:
+```bash
+__node:=<new node name>
+```
+namespace can be remapped as: 
+```bash 
+__ns:=<new node namespace>
+```
+example for remapping `talker` node from ROS2 demo package:
+```bash 
+$ ros2 run demo_nodes_cpp talker __ns:=/demo __node:=my_talker chatter:=my_topic
+```
+* namespace: `->demo`
+* node name: `talker->/demo/my_talker`
+* topic name: `chatter->/demo/my_topic `
 
 ## ROS 2 Networking
 ### What's new in ROS2 networking
@@ -435,3 +456,4 @@ Also, if you don't want different machines to interfere each other, just simply 
 * [ROS2 Presentation](https://static1.squarespace.com/static/51df34b1e4b08840dcfd2841/t/5ce6c85ca4222fe0ccbd5309/1558628472094/2019-05-07_Current_Status_of_ROS_2.pdf) 
 * [ROS concepts](https://github.com/ros2/ros2_documentation/blob/master/source/Concepts/Overview-of-ROS-2-concepts.rst)
 * [Quality of Service Doc](https://github.com/ros2/ros2_documentation/blob/master/source/Concepts/About-Quality-of-Service-Settings.rst)
+* [ROS 2 composition](https://index.ros.org/doc/ros2/Tutorials/Composition/)
